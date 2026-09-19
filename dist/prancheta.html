@@ -3719,6 +3719,9 @@ PJ.PAINEIS.configurar = {
     gGuardar.appendChild(entrada);
     gGuardar.appendChild(itemMenu('Abrir cópia salva',
       'Traz de volta o time de um arquivo guardado.', function () { entrada.click(); }));
+    gGuardar.appendChild(itemMenu('Levar o time para outro aparelho',
+      'Um código para copiar aqui e colar no outro celular, ou no outro link.',
+      ir('levar')));
     gGuardar.appendChild(itemMenu('Procurar time guardado',
       'Mostra tudo que está guardado neste aparelho e traz de volta.', ir('recuperar')));
     gGuardar.appendChild(itemMenu('Ver as dicas de novo',
@@ -4335,25 +4338,26 @@ PJ.entregarArquivo = function (nomeArquivo, dados, recado) {
   pelaAncora();
 };
 
-PJ.copiar = function (txt, campo) {
-  var deuCerto = function () { PJ.aviso('Lista copiada. Agora é só colar no WhatsApp.'); };
+PJ.copiar = function (txt, campo, recado) {
+  var msg = recado || 'Lista copiada. Agora é só colar no WhatsApp.';
+  var deuCerto = function () { PJ.aviso(msg); };
   try {
     if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(txt).then(deuCerto, function () { selecionar(campo); });
+      navigator.clipboard.writeText(txt).then(deuCerto, function () { selecionar(campo, msg); });
       return;
     }
   } catch (err) { /* cai para a seleção na mão */ }
-  selecionar(campo);
+  selecionar(campo, msg);
 };
 
-function selecionar(campo) {
+function selecionar(campo, msg) {
   if (!campo) return;
   campo.readOnly = false;
   campo.focus();
   campo.setSelectionRange(0, campo.value.length);
   try {
     document.execCommand('copy');
-    PJ.aviso('Lista copiada. Agora é só colar no WhatsApp.');
+    PJ.aviso(msg || 'Lista copiada. Agora é só colar no WhatsApp.');
   } catch (err) {
     PJ.aviso('Segure o dedo no texto marcado e escolha Copiar.');
   }
@@ -4674,6 +4678,70 @@ function listaDoJogo(j) {
   });
   return lista;
 }
+
+
+// --------------------------------- levar o time para outro link ou aparelho
+// O time é guardado no aparelho E no endereço em que o aplicativo foi aberto.
+// Trocou de celular ou de link, ele começa do zero — não some nada do lugar
+// antigo, mas também não vai junto sozinho. Este código leva tudo de uma vez,
+// e é o MESMO conteúdo do arquivo de cópia: um serve no lugar do outro.
+
+PJ.PAINEIS.levar = {
+  alto: true,
+  titulo: function () { return 'Levar o time'; },
+  montar: function (corpo) {
+    corpo.appendChild(texto('O seu time fica guardado no aparelho e no endereço em que você abriu o aplicativo. Em outro celular, ou num link diferente, ele começa do zero com o time de exemplo. Este código leva tudo: nomes, camisas, posições, capitão, comissão e táticas.'));
+
+    var levar = secao('1. Copiar o time que está aqui');
+    var codigo = document.createElement('textarea');
+    codigo.className = 'caixaTexto';
+    codigo.readOnly = true;
+    codigo.value = JSON.stringify(PJ.estado);
+    codigo.setAttribute('aria-label', 'Código do seu time');
+    levar.appendChild(codigo);
+    levar.appendChild(bt('Copiar o código do time', 'principal larga', function () {
+      PJ.copiar(codigo.value, codigo,
+        'Código copiado. Cole numa conversa do WhatsApp com você mesmo para não perder.');
+    }));
+    levar.appendChild(texto('São ' + PJ.estado.elenco.length + ' jogadores neste código. Cole numa conversa do WhatsApp com você mesmo; no outro aparelho, copie de lá e traga no passo 2.'));
+    corpo.appendChild(levar);
+
+    var trazer = secao('2. Trazer para cá um time de outro lugar');
+    var colado = document.createElement('textarea');
+    colado.className = 'caixaTexto';
+    colado.placeholder = 'Cole aqui o código que você copiou do outro aparelho';
+    colado.setAttribute('aria-label', 'Código do time que vem de outro aparelho');
+    trazer.appendChild(colado);
+    trazer.appendChild(bt('Trazer o time deste código', 'larga', function () {
+      var lido = null;
+      try {
+        lido = JSON.parse(colado.value.trim());
+      } catch (err) {
+        lido = null;
+      }
+      if (!lido || !Array.isArray(lido.elenco) || !lido.elenco.length || !lido.campos) {
+        PJ.aviso('Esse código não é um time do Plano de Jogo. Copie o código inteiro, do primeiro ao último caractere, sem faltar nada.');
+        return;
+      }
+      PJ.perguntar('Trazer o time "' + String(lido.nomeTime || 'sem nome') + '", com ' +
+        lido.elenco.length + ' jogadores? O time de agora sai da tela — se errar, é só tocar em Desfazer.',
+        'Trazer este time', function () {
+          PJ.antes('trazer time de outro aparelho');
+          PJ.estado = PJ.sanear(PJ.completar(lido));
+          PJ.aplicarTema();
+          PJ.atualizar();
+          PJ.aviso('Time "' + PJ.estado.nomeTime + '" trazido, com ' + PJ.estado.elenco.length +
+            ' jogadores.', 'Desfazer', PJ.desfazerAcao);
+        });
+    }));
+    trazer.appendChild(texto('Serve também para o arquivo da cópia: abra o arquivo, copie tudo o que está escrito dentro dele e cole aqui.'));
+    corpo.appendChild(trazer);
+
+    corpo.appendChild(bt('Pronto', 'principal larga', function () {
+      if (PJ.pilhaPaineis.length) PJ.voltarPainel(); else PJ.fecharPainel();
+    }));
+  },
+};
 
 /* ===== 60-app.js ===== */
 // Liga tudo: abre o aplicativo, desenha a tela e cuida das dicas.

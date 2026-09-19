@@ -894,6 +894,9 @@ PJ.PAINEIS.configurar = {
     gGuardar.appendChild(entrada);
     gGuardar.appendChild(itemMenu('Abrir cópia salva',
       'Traz de volta o time de um arquivo guardado.', function () { entrada.click(); }));
+    gGuardar.appendChild(itemMenu('Levar o time para outro aparelho',
+      'Um código para copiar aqui e colar no outro celular, ou no outro link.',
+      ir('levar')));
     gGuardar.appendChild(itemMenu('Procurar time guardado',
       'Mostra tudo que está guardado neste aparelho e traz de volta.', ir('recuperar')));
     gGuardar.appendChild(itemMenu('Ver as dicas de novo',
