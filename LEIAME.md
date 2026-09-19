@@ -6,7 +6,8 @@ aparelho e não precisa de internet, conta nem senha.
 
 ## Como abrir
 
-**No celular (o jeito de usar na beira do campo):** abra o link do aplicativo.
+**No celular (o jeito de usar na beira do campo):** abra
+https://dalton-lgtm.github.io/planodejogo/ .
 Para deixar o ícone na tela do celular, igual ao WhatsApp, abra o menu do
 navegador (os três pontinhos) e toque em **Adicionar à tela inicial**.
 
