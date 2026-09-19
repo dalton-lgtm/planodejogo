@@ -1,0 +1,581 @@
+/* Presilha da prancheta, abas de modalidade, barra de baixo e as gavetas.
+   Nada de menu escondido: todo botao tem palavra escrita. */
+
+.tela {
+  height: 100%;
+  display: flex;
+  align-items: stretch;
+  background: var(--fundo);
+}
+
+.app {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* ---------------------------------------------------------- presilha */
+
+.presilha {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  padding-top: max(8px, env(safe-area-inset-top, 0px));
+  background: var(--contorno);
+  color: var(--cal);
+}
+:root[data-sol='1'] .presilha { background: #000; }
+
+@media (max-width: 559px) {
+  .presilha .marca { display: none; }
+}
+
+.presilha .marca {
+  font-family: var(--placar);
+  font-weight: 800;
+  font-size: 19px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.presilha .nomeTime {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--cal);
+  background: rgba(245, 247, 240, 0.14);
+  border: 2px solid rgba(245, 247, 240, 0.3);
+  border-radius: 8px;
+  min-height: 44px;
+  padding: 6px 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.presilha .btTopo {
+  min-height: 46px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 2px solid rgba(245, 247, 240, 0.35);
+  color: var(--cal);
+  font-size: 15px;
+  white-space: nowrap;
+}
+.presilha .btTopo[disabled] { opacity: 0.35; }
+.presilha .btTopo.destaque {
+  background: var(--acao);
+  border-color: var(--acao);
+  color: #11160f;
+  font-weight: 900;
+}
+
+/* na tela do celular o cabeçalho fica no essencial */
+@media (max-width: 559px) {
+  .presilha .marca, .presilha .nomeTime { display: none; }
+  .presilha { gap: 8px; }
+}
+
+/* ------------------------------------------- seletor de tipo de campo */
+/* só o campo escolhido aparece; tocar nele abre a escolha */
+
+.chipCampo {
+  flex: 0 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+  line-height: 1.15;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 2px solid var(--acao);
+  background: rgba(242, 92, 5, 0.16);
+  color: var(--cal);
+  min-height: 46px;
+  text-align: left;
+  white-space: nowrap;
+}
+.chipCampo .nomeCampo { font-size: 16px; font-weight: 900; }
+.chipCampo .quantos { font-size: 11px; font-weight: 700; opacity: 0.85; }
+
+/* ------------------------------------------------------- barra de baixo */
+
+.barra {
+  display: flex;
+  gap: 8px;
+  padding: 8px 16px;
+  padding-bottom: max(8px, env(safe-area-inset-bottom, 0px));
+  background: var(--painel);
+  border-top: 2px solid var(--divisa);
+}
+.barra .bt {
+  flex: 1 1 0;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+  min-height: 62px;
+  font-size: 15px;
+  line-height: 1.1;
+  padding: 6px 2px;
+  border-width: 2px;
+  overflow-wrap: normal;
+  word-break: keep-all;
+}
+@media (max-width: 400px) {
+  .barra { gap: 5px; padding-left: 10px; padding-right: 10px; }
+  .barra .bt { font-size: 13px; }
+}
+.barra .bt .quantos { font-size: 12px; font-weight: 700; color: var(--texto2); }
+.barra .bt[aria-pressed='true'] { background: var(--acao); border-color: var(--contorno); color: #11160f; }
+.barra .bt[aria-pressed='true'] .quantos { color: #11160f; }
+
+/* ------------------------------------- barra do jogador escolhido */
+
+.barraJogador {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 8px 16px;
+  background: var(--selecao);
+  color: #11160f;
+  border-top: 2px solid var(--contorno);
+}
+.barraJogador[hidden] { display: none; }
+.barraJogador .quemEscolhido {
+  flex: 1 1 140px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+.barraJogador .quemEscolhido strong {
+  font-size: 17px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.barraJogador .quemEscolhido span { font-size: 13px; font-weight: 700; }
+.barraJogador .bt { border-color: #11160f; background: var(--painel); }
+.barraJogador .bt.principal { background: var(--acao); }
+
+/* ----------------------------------------------------- estado salvo */
+
+.rodapeSalvo {
+  padding: 0 16px 4px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--texto2);
+  background: var(--painel);
+  text-align: left;
+}
+.rodapeSalvo[data-falhou='1'] { color: var(--perigo); }
+
+/* --------------------------------------------------------- gaveta */
+
+.folha {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  max-height: 68%;
+  display: flex;
+  flex-direction: column;
+  background: var(--painel);
+  border-top: 3px solid var(--contorno);
+  border-radius: 14px 14px 0 0;
+  transform: translateY(101%);
+  transition: transform 0.22s ease;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.folha.aberta { transform: none; }
+.folha[hidden] { display: none; }
+/* cadastrar jogador, ajustes e companhia precisam da tela inteira:
+   numa gaveta baixa não sobra espaço para digitar */
+.folha[data-alto='1'] {
+  top: 0;
+  max-height: none;
+  border-radius: 0;
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+.folhaTopo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-bottom: 2px solid var(--divisa);
+  background: var(--painel);
+}
+.folhaTopo h2 { font-size: 19px; flex: 1; min-width: 0; }
+.folhaCorpo {
+  padding: 14px 16px 20px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.cortina {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  background: rgba(8, 14, 8, 0.45);
+  border: 0;
+  width: 100%;
+}
+.cortina[hidden] { display: none; }
+
+/* ------------------------------------------------------------ listas */
+
+.lista { display: flex; flex-direction: column; }
+.itemLista {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--divisa);
+}
+.itemLista .numero {
+  width: 42px;
+  height: 42px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--casa);
+  border: 2px solid var(--contorno);
+  color: var(--cal);
+  font-family: var(--placar);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.itemLista .quem { flex: 1 1 140px; min-width: 0; }
+.itemLista .quem strong {
+  display: block;
+  font-size: 17px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.itemLista .acoes {
+  display: flex;
+  gap: 8px;
+  flex: 1 1 100%;
+  flex-wrap: wrap;
+}
+.itemLista .acoes > * { flex: 1 1 88px; min-height: 48px; font-size: 15px; white-space: nowrap; }
+
+.etiqueta {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  border: 2px solid var(--divisa);
+  color: var(--texto2);
+}
+.etiqueta.dentro { background: var(--casa); border-color: var(--contorno); color: #11160f; }
+.etiqueta.capitao { background: var(--selecao); border-color: var(--contorno); color: #11160f; }
+
+/* fila de reservas do banco */
+.fileiraBanco {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 4px 0 10px;
+  -webkit-overflow-scrolling: touch;
+}
+.reserva {
+  flex: none;
+  width: 78px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 2px;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background: none;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--texto);
+}
+.reserva .bolinha {
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--painel2);
+  border: 3px solid var(--contorno);
+  font-family: var(--placar);
+  font-weight: 800;
+  font-size: 21px;
+  font-variant-numeric: tabular-nums;
+}
+.reserva .nomeCurto { max-width: 74px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.reserva.alvo { border-color: var(--selecao); background: var(--painel2); }
+
+#zonaBanco { border-radius: 10px; }
+#zonaBanco.receptivo { outline: 3px dashed var(--selecao); outline-offset: 3px; }
+
+/* ------------------------------------------ botoes de formacao e tatica */
+
+.grade { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+
+.cartaoTatica {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 76px;
+  padding: 10px 12px;
+  border-radius: var(--raio);
+  border: 2px solid var(--contorno);
+  background: var(--painel2);
+  text-align: left;
+}
+.cartaoTatica .miniatura {
+  width: 40px;
+  height: 58px;
+  flex: none;
+  border-radius: 4px;
+  background: var(--grama);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--gramaBorda);
+}
+.cartaoTatica .miniatura i {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  margin: -3.5px 0 0 -3.5px;
+  border-radius: 50%;
+  background: var(--casa);
+  border: 1px solid #11160f;
+}
+.cartaoTatica .info { flex: 1; min-width: 0; }
+.cartaoTatica .info strong { display: block; font-size: 18px; }
+.cartaoTatica .info span { font-size: 13px; color: var(--texto2); }
+
+.escolhaEstilo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  width: 100%;
+  min-height: 64px;
+  padding: 10px 12px;
+  border-radius: var(--raio);
+  border: 2px solid var(--contorno);
+  background: var(--painel2);
+  text-align: left;
+}
+.escolhaEstilo[aria-pressed='true'] { background: var(--acao); color: #11160f; }
+.escolhaEstilo span { font-size: 13px; font-weight: 400; }
+.escolhaEstilo[aria-pressed='true'] span { color: #11160f; }
+
+/* ------------------------------- banco e comissão ao lado do campo */
+
+.listaLado h3 {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--texto2);
+  margin: 4px 0 8px;
+}
+/* o banco rola sozinho; a comissão fica sempre à vista, embaixo */
+.listaLado .grupoLado.banco {
+  flex: 1 1 auto;
+  min-height: 90px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: 4px;
+}
+.listaLado .grupoLado.comissao {
+  flex: none;
+  padding-top: 12px;
+  border-top: 2px solid var(--divisa);
+  margin-top: 12px;
+}
+.listaLado .vazio { font-size: 14px; color: var(--texto2); margin: 0 0 8px; }
+
+.linhaLado {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 52px;
+  padding: 6px 8px;
+  margin-bottom: 6px;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background: var(--painel2);
+  text-align: left;
+}
+.linhaLado:hover { border-color: var(--divisa); }
+.linhaLado .bolinha {
+  width: 36px;
+  height: 36px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--casa);
+  border: 2px solid var(--contorno);
+  color: var(--cal);
+  font-family: var(--placar);
+  font-weight: 800;
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+}
+.linhaLado .cargo {
+  width: 36px;
+  flex: none;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--texto2);
+  text-transform: uppercase;
+}
+.linhaLado .quem { flex: 1; min-width: 0; }
+.linhaLado .quem strong {
+  display: block;
+  font-size: 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.linhaLado .quem span { font-size: 12px; color: var(--texto2); }
+.linhaLado.aPreencher .quem strong { color: var(--texto2); font-weight: 400; font-style: normal; }
+
+/* ------------------------------------------------ menu de configuração */
+
+.itemMenu {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  width: 100%;
+  min-height: 66px;
+  padding: 12px 14px;
+  border-radius: var(--raio);
+  border: 2px solid var(--contorno);
+  background: var(--painel2);
+  text-align: left;
+}
+.itemMenu strong { font-size: 18px; font-weight: 900; }
+.itemMenu span { font-size: 14px; font-weight: 400; color: var(--texto2); }
+.itemMenu.principal { background: var(--acao); border-color: #11160f; color: #11160f; }
+.itemMenu.principal span { color: #11160f; }
+.itemMenu.perigo { background: transparent; border-color: var(--perigo); color: var(--perigo); }
+.itemMenu.compacto { min-height: 58px; padding: 8px 12px; gap: 0; }
+.itemMenu.compacto strong { font-size: 17px; }
+.itemMenu.compacto span { font-size: 12.5px; line-height: 1.2; }
+
+.grupoMenu { display: flex; flex-direction: column; gap: 10px; }
+
+/* --------------------------------------------------------- recados */
+
+.tarjas {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 84px;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 16px;
+  pointer-events: none;
+}
+.tarja {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: var(--raio);
+  border: 2px solid var(--contorno);
+  background: var(--painel);
+  color: var(--texto);
+  box-shadow: 0 6px 18px rgba(6, 18, 8, 0.3);
+  pointer-events: auto;
+  font-size: 16px;
+  font-weight: 700;
+}
+.tarja p { margin: 0; flex: 1; }
+.tarja.boa { background: var(--acao); color: #11160f; }
+.tarja.atencao { background: var(--selecao); color: #11160f; }
+
+.dica {
+  position: fixed;
+  left: 16px;
+  right: 16px;
+  bottom: 92px;
+  z-index: 70;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 3px solid var(--contorno);
+  background: var(--selecao);
+  color: #11160f;
+  box-shadow: 0 10px 26px rgba(6, 18, 8, 0.4);
+}
+.dica p { margin: 0; flex: 1 1 150px; font-size: 16px; font-weight: 700; }
+.dica .linhaBotoes { flex: 0 1 auto; gap: 8px; }
+.dica .linhaBotoes > * { flex: 0 0 auto; min-height: 48px; padding: 8px 14px; font-size: 16px; }
+.dica[hidden] { display: none; }
+
+/* ------------------------------------------------------- previa foto */
+
+.previaFoto {
+  width: 100%;
+  border-radius: 8px;
+  border: 2px solid var(--divisa);
+  display: block;
+}
+
+.caixaTexto {
+  width: 100%;
+  min-height: 150px;
+  font-size: 15px;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  resize: vertical;
+}
+
+/* ------------------------------------------------- tela grande: 2 colunas */
+
+@media (min-width: 900px) {
+  .folha {
+    position: static;
+    transform: none;
+    width: 420px;
+    flex: none;
+    max-height: none;
+    height: 100%;
+    border-top: 0;
+    border-left: 3px solid var(--contorno);
+    border-radius: 0;
+    transition: none;
+  }
+  .cortina { display: none !important; }
+  .tarjas { left: auto; right: 440px; width: 380px; bottom: 24px; }
+  .dica { left: auto; right: 440px; width: 380px; bottom: 24px; }
+  .areaCampo { padding: 20px 16px 16px; }
+}

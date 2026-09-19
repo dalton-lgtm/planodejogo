@@ -1,0 +1,56 @@
+<title>Plano de Jogo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@112,700;125,800&family=Chivo:wght@400;700;900&display=swap">
+<!--ESTILO-->
+<div class="tela">
+  <div class="app">
+
+    <header class="presilha">
+      <span class="marca">PLANO DE JOGO</span>
+      <button type="button" class="chipCampo" id="btModalidade">
+        <span class="nomeCampo" id="nomeModalidade">Campo 11</span>
+        <span class="quantos" id="quantosCampo">11 em campo</span>
+      </button>
+      <button type="button" class="nomeTime" id="btNomeTime">Meu Time</button>
+      <button type="button" class="btTopo" id="btDesfazer" disabled>Desfazer</button>
+      <button type="button" class="btTopo destaque" id="btConfigurar">Configurar</button>
+    </header>
+
+    <main class="areaCampo" id="areaCampo">
+      <aside class="listaLado" id="listaLado" aria-label="Banco e comissão técnica"></aside>
+      <div id="palco" data-modo="mover">
+        <svg class="camada" id="linhas" aria-hidden="true"></svg>
+        <svg class="camada" id="setas" aria-hidden="true"></svg>
+        <div class="camada" id="pecas"></div>
+        <div id="origem" hidden></div>
+        <span class="selo emCima" id="seloContagem"></span>
+      </div>
+    </main>
+
+    <div class="barraJogador" id="barraJogador" hidden></div>
+
+    <p class="rodapeSalvo" id="rodapeSalvo">Tudo salvo neste aparelho</p>
+
+    <footer class="barra" id="zonaBanco">
+      <button type="button" class="bt" id="btBanco">Banco<span class="quantos" id="quantosBanco"></span></button>
+      <button type="button" class="bt" id="btTaticas">Táticas</button>
+      <button type="button" class="bt" id="btDesenhar">Desenhar</button>
+    </footer>
+
+  </div>
+
+  <aside class="folha" id="folha" hidden aria-label="Painel">
+    <div class="folhaTopo">
+      <h2 id="folhaTitulo">Banco</h2>
+      <button type="button" class="bt pequena" id="btFecharFolha">Fechar</button>
+    </div>
+    <div class="folhaCorpo" id="folhaCorpo"></div>
+  </aside>
+</div>
+
+<button type="button" class="cortina" id="cortina" hidden aria-label="Fechar o painel"></button>
+<div class="tarjas" id="tarjas"></div>
+<div class="dica" id="dica" hidden></div>
+<p class="sr" id="anuncio" role="status" aria-live="polite"></p>
+<!--SCRIPT-->

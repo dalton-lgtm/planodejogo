@@ -1,0 +1,5014 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;font:14px system-ui,-apple-system,sans-serif;background:#fafaf9}
+img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Plano de Jogo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@112,700;125,800&family=Chivo:wght@400;700;900&display=swap">
+<style>
+/* ===== 01-base.css ===== */
+/* Cal, colete e sumula: as cores vem do material do futebol de varzea,
+   nao do mundo de aplicativo. Tudo pensado para ler em pe, no sol. */
+
+:root {
+  --cal: #f5f7f0;
+  --fundo: #e3e7db;
+  --painel: #f5f7f0;
+  --painel2: #ebeee3;
+  --texto: #11160f;
+  --texto2: #4a5346;
+  --contorno: #11160f;
+  --divisa: rgba(17, 22, 15, 0.16);
+  --acao: #f25c05;
+  --acaoTexto: #11160f;
+  --casa: #f25c05;
+  --visitante: #1257c9;
+  --selecao: #ffd400;
+  --perigo: #c4102a;
+  --meio: #d4142a;
+  --grama: #2e7d32;
+  --gramaFaixa: #276e2b;
+  --gramaBorda: #245c27;
+  --sombraPeca: 0 3px 0 rgba(6, 18, 8, 0.45), 0 5px 8px rgba(6, 18, 8, 0.25);
+  --sombraPecaAlta: 0 12px 0 rgba(6, 18, 8, 0.3), 0 16px 22px rgba(6, 18, 8, 0.35);
+  --raio: 10px;
+  --letra: 'Chivo', 'Trebuchet MS', 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+  --placar: 'Archivo', 'Archivo Expanded', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+:root:not([data-theme='light']) {
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --cal: #f5f7f0;
+    --fundo: #0c1210;
+    --painel: #172119;
+    --painel2: #1e2a20;
+    --texto: #f5f7f0;
+    --texto2: #b3bdb0;
+    --divisa: rgba(245, 247, 240, 0.16);
+    --acao: #ff6b1a;
+    --casa: #ff6b1a;
+    --visitante: #3d82f5;
+    --perigo: #ff3b4e;
+    --meio: #ff3b4e;
+    --grama: #1e5626;
+    --gramaFaixa: #1a4b21;
+    --gramaBorda: #133c19;
+    --sombraPeca: 0 3px 0 rgba(0, 0, 0, 0.55), 0 5px 8px rgba(0, 0, 0, 0.4);
+    --sombraPecaAlta: 0 12px 0 rgba(0, 0, 0, 0.4), 0 16px 22px rgba(0, 0, 0, 0.5);
+  }
+}
+
+:root[data-theme='dark'] {
+  --cal: #f5f7f0;
+  --fundo: #0c1210;
+  --painel: #172119;
+  --painel2: #1e2a20;
+  --texto: #f5f7f0;
+  --texto2: #b3bdb0;
+  --divisa: rgba(245, 247, 240, 0.16);
+  --acao: #ff6b1a;
+  --casa: #ff6b1a;
+  --visitante: #3d82f5;
+  --perigo: #ff3b4e;
+  --meio: #ff3b4e;
+  --grama: #1e5626;
+  --gramaFaixa: #1a4b21;
+  --gramaBorda: #133c19;
+  --sombraPeca: 0 3px 0 rgba(0, 0, 0, 0.55), 0 5px 8px rgba(0, 0, 0, 0.4);
+  --sombraPecaAlta: 0 12px 0 rgba(0, 0, 0, 0.4), 0 16px 22px rgba(0, 0, 0, 0.5);
+}
+
+/* Tela para o sol: mais contraste, botao maior, linha mais grossa. */
+:root[data-sol='1'] {
+  --fundo: #ffffff;
+  --painel: #ffffff;
+  --painel2: #f0f0ee;
+  --texto: #000000;
+  --texto2: #23271f;
+  --divisa: rgba(0, 0, 0, 0.35);
+  --grama: #17672c;
+  --gramaFaixa: #135824;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+body {
+  margin: 0;
+  background: var(--fundo);
+  color: var(--texto);
+  font-family: var(--letra);
+  font-size: 17px;
+  line-height: 1.35;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+h1, h2, h3 { margin: 0; font-weight: 900; text-wrap: balance; }
+
+button {
+  font-family: inherit;
+  font-size: 18px;
+  font-weight: 700;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+input, textarea, select {
+  font-family: inherit;
+  font-size: 17px;
+  color: var(--texto);
+  background: var(--painel);
+  border: 2px solid var(--divisa);
+  border-radius: var(--raio);
+  padding: 14px 12px;
+  min-height: 54px;
+  width: 100%;
+}
+input:focus-visible, textarea:focus-visible, select:focus-visible { border-color: var(--acao); }
+
+:focus-visible {
+  outline: 3px solid var(--selecao);
+  outline-offset: 2px;
+}
+
+/* ------------------------------------------------------------- botoes */
+
+.bt {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 56px;
+  padding: 12px 18px;
+  border-radius: var(--raio);
+  border: 2px solid var(--contorno);
+  background: var(--painel);
+  color: var(--texto);
+  text-align: center;
+}
+.bt:active { transform: translateY(1px); }
+.bt[disabled] { opacity: 0.4; cursor: default; }
+
+.bt.principal {
+  background: var(--acao);
+  color: #11160f;
+  border-color: #11160f;
+}
+.bt.perigo {
+  background: transparent;
+  color: var(--perigo);
+  border-color: var(--perigo);
+}
+.bt.larga { width: 100%; }
+.bt.pequena { min-height: 48px; font-size: 16px; padding: 8px 12px; }
+
+:root[data-sol='1'] .bt { min-height: 64px; font-size: 20px; border-width: 3px; }
+
+.linhaBotoes { display: flex; gap: 12px; flex-wrap: wrap; }
+.linhaBotoes > * { flex: 1 1 140px; }
+
+.rotulo {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--texto2);
+}
+
+.explica { font-size: 15px; color: var(--texto2); margin: 4px 0 0; }
+
+.sr {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+}
+
+/* ===== 02-campo.css ===== */
+/* O campo e a peca do jogador. O campo fica sempre em pe, com o nosso gol
+   embaixo, igual ao desenho que o treinador fez a mao. */
+
+.areaCampo {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 18px 16px 14px;
+}
+
+/* Em tela larga sobra muito espaço ao lado do campo em pé: ali ficam o
+   banco e a comissão técnica, sempre à vista. */
+.listaLado {
+  display: none;
+  width: 250px;
+  flex: none;
+  align-self: stretch;
+  flex-direction: column;
+  min-height: 0;
+}
+@media (min-width: 1080px) {
+  .listaLado { display: flex; }
+}
+
+#palco {
+  position: relative;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  background: var(--grama);
+  border: 0;
+  outline: 3px solid var(--gramaBorda);
+  outline-offset: 0;
+}
+
+/* superficie: muda com a modalidade, para o treinador ver que trocou */
+#palco[data-superficie='grama'] {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    var(--grama) 0 12.5%,
+    var(--gramaFaixa) 12.5% 25%
+  );
+}
+#palco[data-superficie='sintetico'] {
+  background-color: #245f35;
+  background-image: repeating-linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0.05) 0 1px,
+    transparent 1px 12.5%
+  );
+}
+#palco[data-superficie='quadra'] { background-color: #2f5358; }
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) #palco[data-superficie='sintetico'] { background-color: #163f24; }
+  :root:not([data-theme='light']) #palco[data-superficie='quadra'] { background-color: #1b383c; }
+}
+:root[data-theme='dark'] #palco[data-superficie='sintetico'] { background-color: #163f24; }
+:root[data-theme='dark'] #palco[data-superficie='quadra'] { background-color: #1b383c; }
+
+.camada {
+  position: absolute;
+  inset: 0;
+  /* SVG é elemento substituído: sem largura e altura explícitas ele usa o
+     tamanho natural e ignora o `inset`, desenhando o campo mais curto que
+     a caixa — e aí as linhas saem do lugar dos jogadores */
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+#linhas, #setas { pointer-events: none; }
+#pecas { pointer-events: none; }
+#pecas .peca { pointer-events: auto; }
+
+/* no modo desenhar, a caneta pega o campo e os jogadores ficam travados */
+#palco[data-modo='desenhar'] #setas { pointer-events: auto; }
+#palco[data-modo='desenhar'] .peca { pointer-events: none; }
+#palco[data-modo='desenhar'] { outline-color: var(--acao); outline-width: 5px; }
+
+/* ------------------------------------------------ linhas de cal do campo */
+
+#linhas .cal {
+  fill: none;
+  stroke: var(--cal);
+  stroke-opacity: 0.92;
+  stroke-width: 0.8;
+  stroke-linejoin: round;
+}
+#linhas .cal.fraca { stroke-opacity: 0.5; }
+#linhas .cal.meio { stroke: var(--meio); stroke-width: 1.15; stroke-opacity: 1; }
+#linhas .calCheia { fill: var(--cal); fill-opacity: 0.92; stroke: none; }
+#linhas .gol { fill: var(--cal); fill-opacity: 0.85; stroke: none; }
+#linhas .rede { stroke: var(--gramaBorda); stroke-width: 0.35; }
+
+:root[data-sol='1'] #linhas .cal { stroke-width: 1.2; stroke-opacity: 1; }
+:root[data-sol='1'] #linhas .cal.meio { stroke-width: 1.7; }
+
+/* --------------------------------------------------- peca do jogador */
+
+/* o tamanho da peca e calculado no codigo, a partir do tamanho do campo,
+   para o numero e o nome nunca ficarem pequenos demais no celular */
+#palco { --disco: 52px; }
+
+.peca {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  transform: translate(-50%, -50%);
+  width: var(--disco);
+  height: var(--disco);
+  display: block;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  z-index: 2;
+}
+
+.peca .disco {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--casa);
+  border: 3px solid var(--contorno);
+  box-shadow: var(--sombraPeca);
+  color: var(--cal);
+  line-height: 1;
+  overflow: hidden;
+}
+/* a sigla da posição mora DENTRO do disco: assim ela nunca encosta no
+   nome do companheiro da linha de trás */
+.peca .disco .sigla {
+  font-family: var(--letra);
+  font-weight: 700;
+  font-size: calc(var(--disco) * 0.185);
+  letter-spacing: 0.04em;
+  opacity: 0.95;
+  margin-bottom: 1px;
+}
+.peca .disco .num {
+  font-family: var(--placar);
+  font-weight: 800;
+  font-size: calc(var(--disco) * 0.42);
+  font-variant-numeric: tabular-nums;
+}
+.peca.adversaria .disco {
+  background: var(--visitante);
+  color: #fff;
+}
+.peca.adversaria .disco .num { font-size: calc(var(--disco) * 0.46); }
+
+.peca .placa {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  transform: translateY(4px);
+  max-width: 100px;
+  padding: 2px 6px;
+  background: var(--cal);
+  border: 2px solid var(--contorno);
+  border-radius: 5px;
+  color: #11160f;
+  font-size: 12.5px;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.peca[data-placa='acima'] .placa {
+  top: auto;
+  bottom: 100%;
+  transform: translateY(-4px);
+}
+
+.peca.escolhida { z-index: 4; }
+.peca.escolhida .disco {
+  box-shadow: 0 0 0 4px var(--selecao), var(--sombraPeca);
+}
+
+.peca.carregando { z-index: 5; }
+.peca.carregando .disco { box-shadow: var(--sombraPecaAlta); }
+
+.peca:focus-visible { outline: none; }
+.peca:focus-visible .disco {
+  outline: 3px solid var(--selecao);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 7px rgba(17, 22, 15, 0.85), var(--sombraPeca);
+}
+
+/* a faixa de capitão, no canto do disco */
+.peca .faixa {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: calc(var(--disco) * 0.4);
+  height: calc(var(--disco) * 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--selecao);
+  border: 2px solid var(--contorno);
+  color: #11160f;
+  font-family: var(--placar);
+  font-weight: 800;
+  font-size: calc(var(--disco) * 0.26);
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* de onde o jogador saiu */
+#origem {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  transform: translate(-50%, -50%);
+  width: var(--disco);
+  height: var(--disco);
+  border: 2px dashed var(--cal);
+  border-radius: 50%;
+  opacity: 0.85;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* etiqueta da modalidade e contador, dentro do campo */
+.selo {
+  position: absolute;
+  z-index: 3;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: rgba(17, 22, 15, 0.72);
+  color: var(--cal);
+  font-size: 13px;
+  font-weight: 700;
+  pointer-events: none;
+}
+.selo.emCima { top: 6px; left: 6px; }
+.selo.embaixo { bottom: 6px; right: 6px; }
+.selo.falta { background: var(--perigo); color: #fff; }
+
+/* ===== 03-interface.css ===== */
+/* Presilha da prancheta, abas de modalidade, barra de baixo e as gavetas.
+   Nada de menu escondido: todo botao tem palavra escrita. */
+
+.tela {
+  height: 100%;
+  display: flex;
+  align-items: stretch;
+  background: var(--fundo);
+}
+
+.app {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* ---------------------------------------------------------- presilha */
+
+.presilha {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  padding-top: max(8px, env(safe-area-inset-top, 0px));
+  background: var(--contorno);
+  color: var(--cal);
+}
+:root[data-sol='1'] .presilha { background: #000; }
+
+@media (max-width: 559px) {
+  .presilha .marca { display: none; }
+}
+
+.presilha .marca {
+  font-family: var(--placar);
+  font-weight: 800;
+  font-size: 19px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.presilha .nomeTime {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--cal);
+  background: rgba(245, 247, 240, 0.14);
+  border: 2px solid rgba(245, 247, 240, 0.3);
+  border-radius: 8px;
+  min-height: 44px;
+  padding: 6px 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.presilha .btTopo {
+  min-height: 46px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 2px solid rgba(245, 247, 240, 0.35);
+  color: var(--cal);
+  font-size: 15px;
+  white-space: nowrap;
+}
+.presilha .btTopo[disabled] { opacity: 0.35; }
+.presilha .btTopo.destaque {
+  background: var(--acao);
+  border-color: var(--acao);
+  color: #11160f;
+  font-weight: 900;
+}
+
+/* na tela do celular o cabeçalho fica no essencial */
+@media (max-width: 559px) {
+  .presilha .marca, .presilha .nomeTime { display: none; }
+  .presilha { gap: 8px; }
+}
+
+/* ------------------------------------------- seletor de tipo de campo */
+/* só o campo escolhido aparece; tocar nele abre a escolha */
+
+.chipCampo {
+  flex: 0 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+  line-height: 1.15;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 2px solid var(--acao);
+  background: rgba(242, 92, 5, 0.16);
+  color: var(--cal);
+  min-height: 46px;
+  text-align: left;
+  white-space: nowrap;
+}
+.chipCampo .nomeCampo { font-size: 16px; font-weight: 900; }
+.chipCampo .quantos { font-size: 11px; font-weight: 700; opacity: 0.85; }
+
+/* ------------------------------------------------------- barra de baixo */
+
+.barra {
+  display: flex;
+  gap: 8px;
+  padding: 8px 16px;
+  padding-bottom: max(8px, env(safe-area-inset-bottom, 0px));
+  background: var(--painel);
+  border-top: 2px solid var(--divisa);
+}
+.barra .bt {
+  flex: 1 1 0;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+  min-height: 62px;
+  font-size: 15px;
+  line-height: 1.1;
+  padding: 6px 2px;
+  border-width: 2px;
+  overflow-wrap: normal;
+  word-break: keep-all;
+}
+@media (max-width: 400px) {
+  .barra { gap: 5px; padding-left: 10px; padding-right: 10px; }
+  .barra .bt { font-size: 13px; }
+}
+.barra .bt .quantos { font-size: 12px; font-weight: 700; color: var(--texto2); }
+.barra .bt[aria-pressed='true'] { background: var(--acao); border-color: var(--contorno); color: #11160f; }
+.barra .bt[aria-pressed='true'] .quantos { color: #11160f; }
+
+/* ------------------------------------- barra do jogador escolhido */
+
+.barraJogador {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 8px 16px;
+  background: var(--selecao);
+  color: #11160f;
+  border-top: 2px solid var(--contorno);
+}
+.barraJogador[hidden] { display: none; }
+.barraJogador .quemEscolhido {
+  flex: 1 1 140px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+.barraJogador .quemEscolhido strong {
+  font-size: 17px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.barraJogador .quemEscolhido span { font-size: 13px; font-weight: 700; }
+.barraJogador .bt { border-color: #11160f; background: var(--painel); }
+.barraJogador .bt.principal { background: var(--acao); }
+
+/* ----------------------------------------------------- estado salvo */
+
+.rodapeSalvo {
+  padding: 0 16px 4px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--texto2);
+  background: var(--painel);
+  text-align: left;
+}
+.rodapeSalvo[data-falhou='1'] { color: var(--perigo); }
+
+/* --------------------------------------------------------- gaveta */
+
+.folha {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  max-height: 68%;
+  display: flex;
+  flex-direction: column;
+  background: var(--painel);
+  border-top: 3px solid var(--contorno);
+  border-radius: 14px 14px 0 0;
+  transform: translateY(101%);
+  transition: transform 0.22s ease;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.folha.aberta { transform: none; }
+.folha[hidden] { display: none; }
+/* cadastrar jogador, ajustes e companhia precisam da tela inteira:
+   numa gaveta baixa não sobra espaço para digitar */
+.folha[data-alto='1'] {
+  top: 0;
+  max-height: none;
+  border-radius: 0;
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+.folhaTopo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-bottom: 2px solid var(--divisa);
+  background: var(--painel);
+}
+.folhaTopo h2 { font-size: 19px; flex: 1; min-width: 0; }
+.folhaCorpo {
+  padding: 14px 16px 20px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.cortina {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  background: rgba(8, 14, 8, 0.45);
+  border: 0;
+  width: 100%;
+}
+.cortina[hidden] { display: none; }
+
+/* ------------------------------------------------------------ listas */
+
+.lista { display: flex; flex-direction: column; }
+.itemLista {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--divisa);
+}
+.itemLista .numero {
+  width: 42px;
+  height: 42px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--casa);
+  border: 2px solid var(--contorno);
+  color: var(--cal);
+  font-family: var(--placar);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.itemLista .quem { flex: 1 1 140px; min-width: 0; }
+.itemLista .quem strong {
+  display: block;
+  font-size: 17px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.itemLista .acoes {
+  display: flex;
+  gap: 8px;
+  flex: 1 1 100%;
+  flex-wrap: wrap;
+}
+.itemLista .acoes > * { flex: 1 1 88px; min-height: 48px; font-size: 15px; white-space: nowrap; }
+
+.etiqueta {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  border: 2px solid var(--divisa);
+  color: var(--texto2);
+}
+.etiqueta.dentro { background: var(--casa); border-color: var(--contorno); color: #11160f; }
+.etiqueta.capitao { background: var(--selecao); border-color: var(--contorno); color: #11160f; }
+
+/* fila de reservas do banco */
+.fileiraBanco {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 4px 0 10px;
+  -webkit-overflow-scrolling: touch;
+}
+.reserva {
+  flex: none;
+  width: 78px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 2px;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background: none;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--texto);
+}
+.reserva .bolinha {
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--painel2);
+  border: 3px solid var(--contorno);
+  font-family: var(--placar);
+  font-weight: 800;
+  font-size: 21px;
+  font-variant-numeric: tabular-nums;
+}
+.reserva .nomeCurto { max-width: 74px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.reserva.alvo { border-color: var(--selecao); background: var(--painel2); }
+
+#zonaBanco { border-radius: 10px; }
+#zonaBanco.receptivo { outline: 3px dashed var(--selecao); outline-offset: 3px; }
+
+/* ------------------------------------------ botoes de formacao e tatica */
+
+.grade { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+
+.cartaoTatica {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 76px;
+  padding: 10px 12px;
+  border-radius: var(--raio);
+  border: 2px solid var(--contorno);
+  background: var(--painel2);
+  text-align: left;
+}
+.cartaoTatica .miniatura {
+  width: 40px;
+  height: 58px;
+  flex: none;
+  border-radius: 4px;
+  background: var(--grama);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--gramaBorda);
+}
+.cartaoTatica .miniatura i {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  margin: -3.5px 0 0 -3.5px;
+  border-radius: 50%;
+  background: var(--casa);
+  border: 1px solid #11160f;
+}
+.cartaoTatica .info { flex: 1; min-width: 0; }
+.cartaoTatica .info strong { display: block; font-size: 18px; }
+.cartaoTatica .info span { font-size: 13px; color: var(--texto2); }
+
+.escolhaEstilo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  width: 100%;
+  min-height: 64px;
+  padding: 10px 12px;
+  border-radius: var(--raio);
+  border: 2px solid var(--contorno);
+  background: var(--painel2);
+  text-align: left;
+}
+.escolhaEstilo[aria-pressed='true'] { background: var(--acao); color: #11160f; }
+.escolhaEstilo span { font-size: 13px; font-weight: 400; }
+.escolhaEstilo[aria-pressed='true'] span { color: #11160f; }
+
+/* ------------------------------- banco e comissão ao lado do campo */
+
+.listaLado h3 {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--texto2);
+  margin: 4px 0 8px;
+}
+/* o banco rola sozinho; a comissão fica sempre à vista, embaixo */
+.listaLado .grupoLado.banco {
+  flex: 1 1 auto;
+  min-height: 90px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: 4px;
+}
+.listaLado .grupoLado.comissao {
+  flex: none;
+  padding-top: 12px;
+  border-top: 2px solid var(--divisa);
+  margin-top: 12px;
+}
+.listaLado .vazio { font-size: 14px; color: var(--texto2); margin: 0 0 8px; }
+
+.linhaLado {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 52px;
+  padding: 6px 8px;
+  margin-bottom: 6px;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background: var(--painel2);
+  text-align: left;
+}
+.linhaLado:hover { border-color: var(--divisa); }
+.linhaLado .bolinha {
+  width: 36px;
+  height: 36px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--casa);
+  border: 2px solid var(--contorno);
+  color: var(--cal);
+  font-family: var(--placar);
+  font-weight: 800;
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+}
+.linhaLado .cargo {
+  width: 36px;
+  flex: none;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--texto2);
+  text-transform: uppercase;
+}
+.linhaLado .quem { flex: 1; min-width: 0; }
+.linhaLado .quem strong {
+  display: block;
+  font-size: 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.linhaLado .quem span { font-size: 12px; color: var(--texto2); }
+.linhaLado.aPreencher .quem strong { color: var(--texto2); font-weight: 400; font-style: normal; }
+
+/* ------------------------------------------------ menu de configuração */
+
+.itemMenu {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  width: 100%;
+  min-height: 66px;
+  padding: 12px 14px;
+  border-radius: var(--raio);
+  border: 2px solid var(--contorno);
+  background: var(--painel2);
+  text-align: left;
+}
+.itemMenu strong { font-size: 18px; font-weight: 900; }
+.itemMenu span { font-size: 14px; font-weight: 400; color: var(--texto2); }
+.itemMenu.principal { background: var(--acao); border-color: #11160f; color: #11160f; }
+.itemMenu.principal span { color: #11160f; }
+.itemMenu.perigo { background: transparent; border-color: var(--perigo); color: var(--perigo); }
+.itemMenu.compacto { min-height: 58px; padding: 8px 12px; gap: 0; }
+.itemMenu.compacto strong { font-size: 17px; }
+.itemMenu.compacto span { font-size: 12.5px; line-height: 1.2; }
+
+.grupoMenu { display: flex; flex-direction: column; gap: 10px; }
+
+/* --------------------------------------------------------- recados */
+
+.tarjas {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 84px;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 16px;
+  pointer-events: none;
+}
+.tarja {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: var(--raio);
+  border: 2px solid var(--contorno);
+  background: var(--painel);
+  color: var(--texto);
+  box-shadow: 0 6px 18px rgba(6, 18, 8, 0.3);
+  pointer-events: auto;
+  font-size: 16px;
+  font-weight: 700;
+}
+.tarja p { margin: 0; flex: 1; }
+.tarja.boa { background: var(--acao); color: #11160f; }
+.tarja.atencao { background: var(--selecao); color: #11160f; }
+
+.dica {
+  position: fixed;
+  left: 16px;
+  right: 16px;
+  bottom: 92px;
+  z-index: 70;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 3px solid var(--contorno);
+  background: var(--selecao);
+  color: #11160f;
+  box-shadow: 0 10px 26px rgba(6, 18, 8, 0.4);
+}
+.dica p { margin: 0; flex: 1 1 150px; font-size: 16px; font-weight: 700; }
+.dica .linhaBotoes { flex: 0 1 auto; gap: 8px; }
+.dica .linhaBotoes > * { flex: 0 0 auto; min-height: 48px; padding: 8px 14px; font-size: 16px; }
+.dica[hidden] { display: none; }
+
+/* ------------------------------------------------------- previa foto */
+
+.previaFoto {
+  width: 100%;
+  border-radius: 8px;
+  border: 2px solid var(--divisa);
+  display: block;
+}
+
+.caixaTexto {
+  width: 100%;
+  min-height: 150px;
+  font-size: 15px;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  resize: vertical;
+}
+
+/* ------------------------------------------------- tela grande: 2 colunas */
+
+@media (min-width: 900px) {
+  .folha {
+    position: static;
+    transform: none;
+    width: 420px;
+    flex: none;
+    max-height: none;
+    height: 100%;
+    border-top: 0;
+    border-left: 3px solid var(--contorno);
+    border-radius: 0;
+    transition: none;
+  }
+  .cortina { display: none !important; }
+  .tarjas { left: auto; right: 440px; width: 380px; bottom: 24px; }
+  .dica { left: auto; right: 440px; width: 380px; bottom: 24px; }
+  .areaCampo { padding: 20px 16px 16px; }
+}
+
+</style>
+</head>
+<body>
+<div class="tela">
+  <div class="app">
+
+    <header class="presilha">
+      <span class="marca">PLANO DE JOGO</span>
+      <button type="button" class="chipCampo" id="btModalidade">
+        <span class="nomeCampo" id="nomeModalidade">Campo 11</span>
+        <span class="quantos" id="quantosCampo">11 em campo</span>
+      </button>
+      <button type="button" class="nomeTime" id="btNomeTime">Meu Time</button>
+      <button type="button" class="btTopo" id="btDesfazer" disabled>Desfazer</button>
+      <button type="button" class="btTopo destaque" id="btConfigurar">Configurar</button>
+    </header>
+
+    <main class="areaCampo" id="areaCampo">
+      <aside class="listaLado" id="listaLado" aria-label="Banco e comissão técnica"></aside>
+      <div id="palco" data-modo="mover">
+        <svg class="camada" id="linhas" aria-hidden="true"></svg>
+        <svg class="camada" id="setas" aria-hidden="true"></svg>
+        <div class="camada" id="pecas"></div>
+        <div id="origem" hidden></div>
+        <span class="selo emCima" id="seloContagem"></span>
+      </div>
+    </main>
+
+    <div class="barraJogador" id="barraJogador" hidden></div>
+
+    <p class="rodapeSalvo" id="rodapeSalvo">Tudo salvo neste aparelho</p>
+
+    <footer class="barra" id="zonaBanco">
+      <button type="button" class="bt" id="btBanco">Banco<span class="quantos" id="quantosBanco"></span></button>
+      <button type="button" class="bt" id="btTaticas">Táticas</button>
+      <button type="button" class="bt" id="btDesenhar">Desenhar</button>
+    </footer>
+
+  </div>
+
+  <aside class="folha" id="folha" hidden aria-label="Painel">
+    <div class="folhaTopo">
+      <h2 id="folhaTitulo">Banco</h2>
+      <button type="button" class="bt pequena" id="btFecharFolha">Fechar</button>
+    </div>
+    <div class="folhaCorpo" id="folhaCorpo"></div>
+  </aside>
+</div>
+
+<button type="button" class="cortina" id="cortina" hidden aria-label="Fechar o painel"></button>
+<div class="tarjas" id="tarjas"></div>
+<div class="dica" id="dica" hidden></div>
+<p class="sr" id="anuncio" role="status" aria-live="polite"></p>
+<script>
+/* ===== 00-dados.js ===== */
+// Dados do jogo: modalidades, medidas reais dos campos, posições,
+// formações prontas e estilos de jogo.
+//
+// SISTEMA DE COORDENADAS (o mesmo em todo o aplicativo):
+//   x = 0 na lateral esquerda, x = 100 na lateral direita
+//   y = 0 na linha de fundo do NOSSO gol, y = 100 na linha de fundo do gol adversário
+//   raio/medida redonda = porcentagem da LARGURA do campo
+// O campo e sempre desenhado em pe (retrato), com o nosso gol embaixo,
+// igual ao desenho que o treinador fez a mão.
+
+var PJ = {};
+
+// ---------------------------------------------------------------- posições
+
+// `camisa` e `camisa2` são a numeração clássica do futebol brasileiro:
+// 1 goleiro, 2 lateral-direito, 3 e 4 zagueiros, 5 volante, 6 lateral-
+// esquerdo, 7 ponta-direita, 8 e 10 meias, 9 centroavante, 11 ponta-
+// esquerda. O aplicativo usa isso só para sugerir o número ao cadastrar.
+PJ.POSICOES = {
+  GOL: { nome: 'Goleiro', setor: 'goleiro', camisa: 1, camisa2: 12 },
+  ZAG: { nome: 'Zagueiro', setor: 'defesa', camisa: 3, camisa2: 4 },
+  LE: { nome: 'Lateral-esquerdo', setor: 'defesa', camisa: 6, camisa2: 16 },
+  LD: { nome: 'Lateral-direito', setor: 'defesa', camisa: 2, camisa2: 13 },
+  FIXO: { nome: 'Fixo', setor: 'defesa', camisa: 3, camisa2: 4 },
+  ALA: { nome: 'Ala', setor: 'meio', camisa: 7, camisa2: 11 },
+  VOL: { nome: 'Volante', setor: 'meio', camisa: 5, camisa2: 8 },
+  ME: { nome: 'Meia-esquerda', setor: 'meio', camisa: 11, camisa2: 10 },
+  MD: { nome: 'Meia-direita', setor: 'meio', camisa: 7, camisa2: 17 },
+  MEI: { nome: 'Meia', setor: 'meio', camisa: 10, camisa2: 8 },
+  PE: { nome: 'Ponta-esquerda', setor: 'ataque', camisa: 11, camisa2: 20 },
+  PD: { nome: 'Ponta-direita', setor: 'ataque', camisa: 7, camisa2: 17 },
+  ATA: { nome: 'Atacante', setor: 'ataque', camisa: 9, camisa2: 19 },
+  'PIVÔ': { nome: 'Pivô', setor: 'ataque', camisa: 9, camisa2: 19 },
+};
+
+// Descobre a sigla da posição pelo lugar onde o jogador esta no campo.
+// E o que faz a etiqueta mudar sozinha quando o treinador arrasta a peca.
+PJ.siglaPorLugar = function (modalidade, x, y) {
+  if (modalidade === 'futsal') {
+    if (y < 16) return 'GOL';
+    if (y < 38) return 'FIXO';
+    if (y >= 64) return 'PIVÔ';
+    if (x < 32 || x > 68) return 'ALA';
+    return y < 52 ? 'FIXO' : 'PIVÔ';
+  }
+  if (modalidade === 'society') {
+    if (y < 15) return 'GOL';
+    if (y < 36) return 'ZAG';
+    if (y < 60) {
+      if (x < 24 || x > 76) return 'ALA';
+      return y < 48 ? 'VOL' : 'MEI';
+    }
+    if (x < 28) return 'PE';
+    if (x > 72) return 'PD';
+    return 'ATA';
+  }
+  // campo 11
+  if (y < 14) return 'GOL';
+  if (y < 34) {
+    if (x < 22) return 'LE';
+    if (x > 78) return 'LD';
+    return 'ZAG';
+  }
+  if (y < 58) {
+    if (x < 20) return 'ME';
+    if (x > 80) return 'MD';
+    return y < 45 ? 'VOL' : 'MEI';
+  }
+  if (x < 26) return 'PE';
+  if (x > 74) return 'PD';
+  return 'ATA';
+};
+
+// ------------------------------------------------- geometria de cada campo
+// Monta a lista de tracos do campo a partir das medidas REAIS em metros.
+// Devolve figuras simples que servem tanto para desenhar na tela (SVG)
+// quanto para gerar a foto do campo (canvas), sem duplicar conta nenhuma.
+
+function arcoPontos(cx, cy, raioX, raioY, grau1, grau2, passos) {
+  var pontos = [];
+  var n = passos || 20;
+  for (var i = 0; i <= n; i++) {
+    var g = (grau1 + ((grau2 - grau1) * i) / n) * (Math.PI / 180);
+    pontos.push([cx + raioX * Math.cos(g), cy + raioY * Math.sin(g)]);
+  }
+  return pontos;
+}
+
+function geometriaCampo(m) {
+  var L = m.comprimentoM;
+  var W = m.larguraM;
+  var px = function (metros) { return (metros / W) * 100; }; // largura -> %
+  var py = function (metros) { return (metros / L) * 100; }; // comprimento -> %
+  var pr = function (metros) { return (metros / W) * 100; }; // raio -> % da largura
+
+  var f = [];
+  var add = function (fig) { f.push(fig); };
+
+  // borda e linha do meio
+  add({ tipo: 'retangulo', x: 0, y: 0, largura: 100, altura: 100 });
+  add({ tipo: 'linha', x1: 0, y1: 50, x2: 100, y2: 50, papel: 'meio' });
+  add({ tipo: 'disco', cx: 50, cy: 50, r: pr(0.22) });
+
+  // circulo central
+  if (m.raioCentralM) {
+    add({ tipo: 'circulo', cx: 50, cy: 50, r: pr(m.raioCentralM), papel: m.circuloOpcional ? 'fraco' : '' });
+  }
+
+  var lado; // -1 = nosso lado (embaixo), +1 = lado do adversário (em cima)
+  for (lado = 0; lado < 2; lado++) {
+    var base = lado === 0 ? 0 : 100;       // linha de fundo
+    var dentro = lado === 0 ? 1 : -1;      // sentido para dentro do campo
+
+    // gol
+    var meioGol = px(m.golM) / 2;
+    add({ tipo: 'gol', x1: 50 - meioGol, x2: 50 + meioGol, y: base, dentro: dentro });
+
+    if (m.grandeAreaM) {
+      var gl = px(m.grandeAreaM.larguraM) / 2;
+      var gp = py(m.grandeAreaM.profundidadeM);
+      add({
+        tipo: 'retangulo',
+        x: 50 - gl, largura: gl * 2,
+        y: lado === 0 ? 0 : 100 - gp, altura: gp,
+      });
+    }
+    if (m.pequenaAreaM) {
+      var pl = px(m.pequenaAreaM.larguraM) / 2;
+      var pp = py(m.pequenaAreaM.profundidadeM);
+      add({
+        tipo: 'retangulo',
+        x: 50 - pl, largura: pl * 2,
+        y: lado === 0 ? 0 : 100 - pp, altura: pp,
+      });
+    }
+
+    // área do futsal: dois quartos de circulo ligados por uma reta
+    if (m.areaArcoM) {
+      var raio = m.areaArcoM.raioM;
+      var cxEsq = 50 - px(m.areaArcoM.entrePostesM) / 2;
+      var cxDir = 50 + px(m.areaArcoM.entrePostesM) / 2;
+      var rx = pr(raio);
+      var ry = py(raio);
+      var topo = lado === 0 ? ry : 100 - ry;
+      var esq = arcoPontos(cxEsq, base, rx, ry * dentro, 180, 90, 16);
+      var dir = arcoPontos(cxDir, base, rx, ry * dentro, 90, 0, 16);
+      add({ tipo: 'poligonal', pontos: esq });
+      add({ tipo: 'linha', x1: cxEsq, y1: topo, x2: cxDir, y2: topo });
+      add({ tipo: 'poligonal', pontos: dir });
+    }
+
+    // marca do pênalti
+    if (m.penaltiM != null) {
+      var yp = lado === 0 ? py(m.penaltiM) : 100 - py(m.penaltiM);
+      add({ tipo: 'disco', cx: 50, cy: yp, r: pr(0.22) });
+
+      // meia-lua: só a parte que fica fora da grande área
+      if (m.meiaLua && m.grandeAreaM) {
+        var rArco = pr(m.raioCentralM);
+        var rArcoY = py(m.raioCentralM);
+        var limite = lado === 0 ? py(m.grandeAreaM.profundidadeM) : 100 - py(m.grandeAreaM.profundidadeM);
+        var dy = Math.abs(limite - yp);
+        var ang = Math.asin(Math.min(1, dy / rArcoY)) * (180 / Math.PI);
+        add({ tipo: 'poligonal', pontos: arcoPontos(50, yp, rArco, rArcoY * dentro, ang, 180 - ang, 18) });
+      }
+    }
+
+    // segunda marca do futsal (10 metros)
+    if (m.segundaMarcaM != null) {
+      var y2 = lado === 0 ? py(m.segundaMarcaM) : 100 - py(m.segundaMarcaM);
+      add({ tipo: 'disco', cx: 50, cy: y2, r: pr(0.22) });
+    }
+
+    // arcos de escanteio
+    if (m.escanteioM) {
+      var re = pr(m.escanteioM);
+      var reY = py(m.escanteioM);
+      add({ tipo: 'poligonal', pontos: arcoPontos(0, base, re, reY * dentro, 0, 90, 8) });
+      add({ tipo: 'poligonal', pontos: arcoPontos(100, base, re, reY * dentro, 90, 180, 8) });
+    }
+
+    // marcas de saída do society
+    if (m.marcaSaidaM) {
+      var ys = lado === 0 ? 50 - py(m.marcaSaidaM.distanciaM) : 50 + py(m.marcaSaidaM.distanciaM);
+      var meia = px(m.marcaSaidaM.comprimentoM) / 2;
+      add({ tipo: 'linha', x1: 50 - meia, y1: ys, x2: 50 + meia, y2: ys });
+    }
+  }
+  return f;
+}
+
+// ------------------------------------------------------------- modalidades
+
+PJ.MODALIDADES = {
+  campo11: {
+    id: 'campo11',
+    nome: 'Campo 11',
+    nomeLongo: 'Futebol de campo',
+    emCampo: 11,
+    comprimentoM: 105,
+    larguraM: 68,
+    golM: 7.32,
+    raioCentralM: 9.15,
+    penaltiM: 11,
+    meiaLua: true,
+    escanteioM: 1,
+    grandeAreaM: { profundidadeM: 16.5, larguraM: 40.32 },
+    pequenaAreaM: { profundidadeM: 5.5, larguraM: 18.32 },
+    superficie: 'grama',
+    formacoes: [
+      { id: 'c11-4-4-2', nome: '4-4-2', explicacao: 'Duas fileiras de quatro e dois na frente. Cada um marca quem está na sua frente: é o mais fácil de explicar para o time.', jogadores: [['GOL', 50, 5], ['LE', 10, 20], ['ZAG', 36, 18], ['ZAG', 64, 18], ['LD', 90, 20], ['ME', 10, 46], ['VOL', 38, 42], ['MEI', 62, 42], ['MD', 90, 46], ['ATA', 35, 78], ['ATA', 65, 78]] },
+      { id: 'c11-4-3-3', nome: '4-3-3', explicacao: 'Três homens lá na frente e o campo bem aberto. Serve para atacar e apertar o adversário perto da área dele.', jogadores: [['GOL', 50, 5], ['LE', 10, 22], ['ZAG', 36, 18], ['ZAG', 64, 18], ['LD', 90, 22], ['VOL', 50, 38], ['MEI', 32, 50], ['MEI', 68, 50], ['PE', 12, 72], ['ATA', 50, 80], ['PD', 88, 72]] },
+      { id: 'c11-4-2-3-1', nome: '4-2-3-1', explicacao: 'Dois segurando na frente da zaga e três criando jogada para um atacante só. Dá segurança atrás sem perder quem toca a bola.', jogadores: [['GOL', 50, 5], ['LE', 10, 22], ['ZAG', 36, 18], ['ZAG', 64, 18], ['LD', 90, 22], ['VOL', 37, 36], ['VOL', 63, 36], ['PE', 12, 58], ['MEI', 50, 56], ['PD', 88, 58], ['ATA', 50, 80]] },
+      { id: 'c11-3-5-2', nome: '3-5-2', explicacao: 'Enche o meio com cinco jogadores e põe dois homens nos lados para subir e descer o jogo inteiro. Bom para mandar no meio.', jogadores: [['GOL', 50, 5], ['ZAG', 26, 18], ['ZAG', 50, 16], ['ZAG', 74, 18], ['ALA', 8, 48], ['VOL', 34, 38], ['MEI', 50, 52], ['VOL', 66, 38], ['ALA', 92, 48], ['ATA', 38, 78], ['ATA', 62, 78]] },
+      { id: 'c11-4-4-2-losango', nome: '4-4-2 losango', explicacao: 'O mesmo 4-4-2, mas com o meio em losango: um segura atrás, dois pelos lados e um grudado nos atacantes para dar os passes.', jogadores: [['GOL', 50, 5], ['LE', 10, 22], ['ZAG', 36, 18], ['ZAG', 64, 18], ['LD', 90, 22], ['VOL', 50, 34], ['MEI', 24, 48], ['MEI', 76, 48], ['MEI', 50, 62], ['ATA', 35, 80], ['ATA', 65, 80]] },
+      { id: 'c11-5-3-2', nome: '5-3-2', explicacao: 'Cinco atrás para fechar tudo. Use quando o adversário é mais forte ou quando você está ganhando e quer segurar.', jogadores: [['GOL', 50, 5], ['LE', 8, 26], ['ZAG', 26, 17], ['ZAG', 50, 15], ['ZAG', 74, 17], ['LD', 92, 26], ['VOL', 50, 40], ['MEI', 28, 50], ['MEI', 72, 50], ['ATA', 38, 74], ['ATA', 62, 74]] },
+    ],
+  },
+
+  society: {
+    id: 'society',
+    nome: 'Society 7',
+    nomeLongo: 'Futebol society (fut7)',
+    emCampo: 7,
+    comprimentoM: 50,
+    larguraM: 30,
+    golM: 4,
+    raioCentralM: 5,
+    penaltiM: 7,
+    meiaLua: false,
+    escanteioM: 1,
+    grandeAreaM: { profundidadeM: 8, larguraM: 14 },
+    pequenaAreaM: null,
+    marcaSaidaM: { distanciaM: 5, comprimentoM: 5 },
+    superficie: 'sintetico',
+    formacoes: [
+      { id: 's7-2-3-1', nome: '2-3-1', explicacao: 'A mais usada no society: dois atrás, três no meio e um na frente. Cobre o campo inteiro sem matar ninguém de cansaço.', jogadores: [['GOL', 50, 6], ['ZAG', 32, 20], ['ZAG', 68, 20], ['ALA', 12, 48], ['MEI', 50, 44], ['ALA', 88, 48], ['ATA', 50, 76]] },
+      { id: 's7-3-2-1', nome: '3-2-1', explicacao: 'O pinheirinho: três bem atrás, dois no meio e um na frente, para o time que não quer tomar gol de jeito nenhum.', jogadores: [['GOL', 50, 6], ['ZAG', 22, 22], ['ZAG', 50, 16], ['ZAG', 78, 22], ['MEI', 32, 48], ['MEI', 68, 48], ['ATA', 50, 76]] },
+      { id: 's7-2-2-2', nome: '2-2-2', explicacao: 'Dois atrás, dois no meio e dois na frente. Time equilibrado e fácil de explicar para quem nunca jogou com esquema.', jogadores: [['GOL', 50, 6], ['ZAG', 30, 20], ['ZAG', 70, 20], ['MEI', 26, 48], ['MEI', 74, 48], ['ATA', 34, 76], ['ATA', 66, 76]] },
+      { id: 's7-3-1-2', nome: '3-1-2', explicacao: 'Três atrás, um segurando o meio e dois na frente prontos para sair no contra-ataque assim que roubar a bola.', jogadores: [['GOL', 50, 6], ['ZAG', 20, 24], ['ZAG', 50, 16], ['ZAG', 80, 24], ['VOL', 50, 44], ['ATA', 32, 72], ['ATA', 68, 72]] },
+      { id: 's7-2-1-3', nome: '2-1-3', explicacao: 'Três homens na frente para pressionar e buscar o gol. Use quando estiver perdendo e precisar virar o jogo.', jogadores: [['GOL', 50, 6], ['ZAG', 34, 22], ['ZAG', 66, 22], ['VOL', 50, 44], ['PE', 14, 70], ['ATA', 50, 80], ['PD', 86, 70]] },
+    ],
+  },
+
+  futsal: {
+    id: 'futsal',
+    nome: 'Salão 5',
+    nomeLongo: 'Futsal (futebol de salão)',
+    emCampo: 5,
+    comprimentoM: 40,
+    larguraM: 20,
+    golM: 3,
+    raioCentralM: 3,
+    penaltiM: 6,
+    segundaMarcaM: 10,
+    meiaLua: false,
+    escanteioM: 0.25,
+    grandeAreaM: null,
+    pequenaAreaM: null,
+    areaArcoM: { raioM: 6, entrePostesM: 3.16 },
+    superficie: 'quadra',
+    formacoes: [
+      { id: 'fs-1-2-1', nome: '1-2-1', explicacao: 'O losango: um fixo atrás, dois alas nos lados e o pivô na frente. É o que quase todo time de salão usa.', jogadores: [['GOL', 50, 6], ['FIXO', 50, 24], ['ALA', 16, 50], ['ALA', 84, 50], ['PIVÔ', 50, 76]] },
+      { id: 'fs-2-2', nome: '2-2', explicacao: 'O quadrado: dois atrás e dois na frente, cada um com um parceiro do lado para se revezar quando cansar.', jogadores: [['GOL', 50, 6], ['FIXO', 28, 26], ['FIXO', 72, 26], ['ALA', 28, 68], ['ALA', 72, 68]] },
+      { id: 'fs-3-1', nome: '3-1', explicacao: 'Três atrás fechando a quadra e só o pivô na frente: segura o jogo e sai rápido no contra-ataque.', jogadores: [['GOL', 50, 6], ['ALA', 18, 30], ['FIXO', 50, 20], ['ALA', 82, 30], ['PIVÔ', 50, 70]] },
+      { id: 'fs-4-0', nome: '4-0', explicacao: 'Sem pivô: os quatro ficam na mesma altura e trocam de lugar o tempo todo para bagunçar a marcação do adversário.', jogadores: [['GOL', 50, 6], ['ALA', 12, 54], ['FIXO', 35, 44], ['FIXO', 65, 44], ['ALA', 88, 54]] },
+      { id: 'fs-goleiro-linha', nome: 'Goleiro-linha', goleiroNaLinha: true, explicacao: 'O goleiro sai do gol e vira o quinto jogador: 5 contra 4, todo mundo no ataque. Use quando estiver perdendo no fim do jogo — se perder a bola, o gol fica vazio.', jogadores: [['GOL', 50, 52], ['ALA', 16, 70], ['ALA', 84, 70], ['PIVÔ', 34, 84], ['PIVÔ', 66, 84]] },
+    ],
+  },
+};
+
+PJ.ORDEM_MODALIDADES = ['campo11', 'society', 'futsal'];
+
+// A comissão técnica nasce com os três cargos que todo time de várzea tem;
+// o treinador acrescenta os outros se quiser.
+PJ.CARGOS_PADRAO = ['Técnico', 'Auxiliar técnico', 'Massagista'];
+PJ.CARGOS_EXTRAS = ['Preparador físico', 'Treinador de goleiros', 'Roupeiro', 'Diretor'];
+
+// Até onde o time pode subir. Sem esse teto, o estilo "Tudo pra frente"
+// empurra o atacante para dentro do gol adversário.
+PJ.MODALIDADES.campo11.alturaMaxima = 88;
+PJ.MODALIDADES.society.alturaMaxima = 88;
+PJ.MODALIDADES.futsal.alturaMaxima = 86;
+
+// Quanto a peça precisa ficar longe da linha lateral para o círculo não
+// passar dela. Quanto mais estreito o campo, maior a peça em porcentagem.
+PJ.MODALIDADES.campo11.margemLateral = 8;
+PJ.MODALIDADES.society.margemLateral = 9;
+PJ.MODALIDADES.futsal.margemLateral = 10.5;
+
+// O desenho de fábrica das formações nasce esticado demais: 60 pontos entre
+// o zagueiro e o atacante são 63 metros de campo, e nenhum time joga assim.
+// O bloco de verdade tem 30 a 40 metros. Aperta o bloco uma vez, guardando
+// o formato e a simetria — de quebra, afasta o zagueiro do goleiro.
+function apertarBloco(m, fator) {
+  m.formacoes.forEach(function (f) {
+    var naLinha = function (j) { return f.goleiroNaLinha || j[0] !== 'GOL'; };
+    var linha = f.jogadores.filter(naLinha);
+    if (!linha.length) return;
+    var cy = linha.reduce(function (soma, j) { return soma + j[2]; }, 0) / linha.length;
+    f.jogadores.forEach(function (j) {
+      if (!naLinha(j)) return;
+      var y = cy + (j[2] - cy) * fator;
+      j[2] = Math.round(Math.max(8, Math.min(m.alturaMaxima, y)) * 10) / 10;
+    });
+  });
+}
+
+// Guarda a geometria pronta de cada campo (calculada uma vez só).
+PJ.ORDEM_MODALIDADES.forEach(function (id) {
+  var m = PJ.MODALIDADES[id];
+  apertarBloco(m, 0.78);
+  m.figuras = geometriaCampo(m);
+  m.proporcao = m.larguraM / m.comprimentoM;      // largura / altura
+  m.alturaVB = (m.comprimentoM / m.larguraM) * 100; // altura do viewBox do SVG
+});
+
+// ---------------------------------------------------------- estilos de jogo
+// Cada estilo empurra o time para frente/trás, junta ou estica as linhas
+// e abre ou fecha o time na largura. O goleiro quase não se mexe.
+
+PJ.ESTILOS = [
+  { id: 'padrao', nome: 'Normal', explicacao: 'Deixa o time no desenho da formação escolhida: não sobe, não desce, não abre e não fecha.', quandoUsar: 'No começo do jogo, antes de mudar alguma coisa.', desloca: 0, compacta: 1, abre: 1 },
+  { id: 'pressao-alta', nome: 'Pressão alta', explicacao: 'O time inteiro sobe e fica mais juntinho, para marcar o adversário perto da área dele.', quandoUsar: 'Quando o outro time tem dificuldade de sair jogando.', desloca: 10, compacta: 0.85, abre: 1 },
+  { id: 'fechado-atras', nome: 'Fechado atrás', explicacao: 'Todo mundo recua, as linhas se juntam e sobra pouco espaço na frente do seu gol.', quandoUsar: 'Quando o adversário é mais forte, ou para segurar o resultado.', desloca: -10, compacta: 0.75, abre: 0.85 },
+  { id: 'contra-ataque', nome: 'Contra-ataque', explicacao: 'O time recua e fica curto, mas deixa o homem da frente esticado para sair correndo quando roubar a bola.', quandoUsar: 'Quando o adversário ataca muito e deixa espaço nas costas.', desloca: -6, compacta: 0.85, abre: 0.95, esticaFrente: 14 },
+  { id: 'toque-de-bola', nome: 'Toque de bola', explicacao: 'Aproxima os jogadores uns dos outros: quem está com a bola sempre tem alguém perto para receber.', quandoUsar: 'Para segurar a bola, acalmar o jogo e cansar o adversário.', desloca: 4, compacta: 0.8, abre: 1.1 },
+  { id: 'abre-nas-pontas', nome: 'Abre nas pontas', explicacao: 'Joga os jogadores dos lados colados na linha lateral, esticando a marcação para abrir buraco no meio.', quandoUsar: 'Quando o adversário fecha o meio e sobra espaço pelos lados.', desloca: 2, compacta: 1, abre: 1.2 },
+  { id: 'afunila', nome: 'Joga por dentro', explicacao: 'Fecha o time pelo meio, todo mundo mais perto do centro e ninguém colado na lateral.', quandoUsar: 'Quando seus melhores jogadores jogam por dentro.', desloca: 3, compacta: 0.95, abre: 0.7 },
+  { id: 'tudo-pra-frente', nome: 'Tudo pra frente', explicacao: 'Empurra o time inteiro para o campo do adversário, deixando pouca gente atrás para arriscar o gol.', quandoUsar: 'Nos últimos minutos, quando precisa do gol de qualquer jeito.', desloca: 16, compacta: 0.9, abre: 1.15 },
+];
+
+PJ.estiloPorId = function (id) {
+  for (var i = 0; i < PJ.ESTILOS.length; i++) if (PJ.ESTILOS[i].id === id) return PJ.ESTILOS[i];
+  return PJ.ESTILOS[0];
+};
+
+// ------------------------------------------------------------ time exemplo
+// O aplicativo nunca abre vazio: já vem com um time escalado para mexer.
+
+// A ordem desta lista é a ordem das vagas da formação: goleiro, lateral-
+// esquerdo, os dois zagueiros, lateral-direito, e assim por diante.
+PJ.ELENCO_EXEMPLO = [
+  { numero: 1, nome: 'Nivaldo' },
+  { numero: 6, nome: 'Tião' },
+  { numero: 3, nome: 'Cleiton' },
+  { numero: 4, nome: 'Baiano' },
+  { numero: 2, nome: 'Juninho' },
+  { numero: 11, nome: 'Val' },
+  { numero: 5, nome: 'Cacá' },
+  { numero: 8, nome: 'Serginho' },
+  { numero: 7, nome: 'Paulinho' },
+  { numero: 9, nome: 'Zé' },
+  { numero: 10, nome: 'Bigode' },
+  { numero: 12, nome: 'Nando' },
+  { numero: 13, nome: 'Marquinhos' },
+  { numero: 14, nome: 'Dê' },
+  { numero: 15, nome: 'Rafa' },
+  { numero: 16, nome: 'Léo' },
+];
+
+/* ===== 10-estado.js ===== */
+// Guarda tudo no próprio aparelho, sem conta e sem internet.
+// Também cuida do "Desfazer": antes de cada mudanca, guarda uma cópia.
+
+PJ.CHAVE = 'planodejogo.v2';
+PJ.CHAVE_COPIA = 'planodejogo.copia';        // segunda via, gravada junto
+PJ.CHAVES_ANTIGAS = ['planodejogo.v1'];      // versões anteriores do aplicativo
+PJ.estado = null;
+
+var pilhaDesfazer = [];
+var LIMITE_DESFAZER = 30;
+var agendaSalvar = null;
+
+PJ.uid = function () {
+  PJ.estado.proximoId = (PJ.estado.proximoId || 1) + 1;
+  return 'j' + PJ.estado.proximoId;
+};
+
+function copia(v) {
+  return JSON.parse(JSON.stringify(v));
+}
+
+// Monta a escalação inicial de uma modalidade a partir de uma formação.
+function escalarDaFormacao(modalidade, formacao, elenco) {
+  var emCampo = [];
+  for (var i = 0; i < formacao.jogadores.length && i < elenco.length; i++) {
+    var slot = formacao.jogadores[i];
+    emCampo.push({ id: elenco[i].id, x: slot[1], y: slot[2] });
+    if (!elenco[i].posicao) elenco[i].posicao = slot[0];
+  }
+  return emCampo;
+}
+
+function campoVazio(idModalidade, elenco) {
+  var m = PJ.MODALIDADES[idModalidade];
+  var f = m.formacoes[0];
+  return {
+    emCampo: escalarDaFormacao(idModalidade, f, elenco),
+    formacao: f.id,
+    estilo: 'padrao',
+    setas: [],
+    adversarios: [],
+  };
+}
+
+PJ.estadoNovo = function () {
+  var base = PJ.MODALIDADES.campo11.formacoes[0].jogadores;
+  var banco = ['GOL', 'ZAG', 'LD', 'MEI', 'ATA'];   // posições dos reservas
+  var elenco = PJ.ELENCO_EXEMPLO.map(function (j, i) {
+    return {
+      id: 'j' + (i + 1), numero: j.numero, nome: j.nome,
+      posicao: base[i] ? base[i][0] : (banco[i - base.length] || 'MEI'),
+      exemplo: true,
+    };
+  });
+  var e = {
+    versao: 1,
+    proximoId: elenco.length,
+    exemplo: true,
+    nomeTime: 'Meu Time',
+    modalidade: 'campo11',
+    tela: 'auto',
+    adversario: false,
+    dicas: 0,
+    elenco: elenco,
+    capitao: null,
+    comissao: PJ.CARGOS_PADRAO.map(function (cargo) {
+      return { cargo: cargo, nome: '' };
+    }),
+    campos: {},
+    taticas: [],
+    jogo: { ligado: false, nos: 0, eles: 0, registro: [] },
+  };
+  PJ.ORDEM_MODALIDADES.forEach(function (id) {
+    e.campos[id] = campoVazio(id, elenco);
+  });
+  return e;
+};
+
+// Em aba privada, em arquivo local ou com o armazenamento bloqueado, até
+// o simples acesso a localStorage estoura. Entao tudo passa por aqui.
+PJ.semMemoria = false;
+
+function ler(chave) {
+  try { return window.localStorage.getItem(chave); } catch (err) { PJ.semMemoria = true; return null; }
+}
+function escrever(chave, valor) {
+  try {
+    window.localStorage.setItem(chave, valor);
+    return true;
+  } catch (err) {
+    var cota = err && (err.name === 'QuotaExceededError' ||
+      err.name === 'NS_ERROR_DOM_QUOTA_REACHED' || err.code === 22 || err.code === 1014);
+    if (cota) return 'cheio';
+    PJ.semMemoria = true;
+    return false;
+  }
+}
+
+function interpretar(bruto, chave) {
+  if (!bruto) return null;
+  try {
+    var lido = JSON.parse(bruto);
+    if (lido && Array.isArray(lido.elenco) && lido.elenco.length && lido.campos) return lido;
+  } catch (err) {
+    // guarda o que não deu para ler, em vez de jogar fora sem avisar
+    if (chave) escrever(chave + '.ilegivel', bruto);
+  }
+  return null;
+}
+
+PJ.deOndeVeio = '';
+
+PJ.carregar = function () {
+  var lido = interpretar(ler(PJ.CHAVE), PJ.CHAVE);
+  if (lido) PJ.deOndeVeio = 'principal';
+
+  // o arquivo principal falhou: tenta a segunda via gravada junto com ele
+  if (!lido) {
+    lido = interpretar(ler(PJ.CHAVE_COPIA), PJ.CHAVE_COPIA);
+    if (lido) PJ.deOndeVeio = 'copia';
+  }
+
+  // ainda nada: procura o time guardado por uma versão anterior
+  if (!lido) {
+    for (var i = 0; i < PJ.CHAVES_ANTIGAS.length && !lido; i++) {
+      lido = interpretar(ler(PJ.CHAVES_ANTIGAS[i]), null);
+      if (lido) PJ.deOndeVeio = 'antiga';
+    }
+  }
+
+  if (lido) {
+    PJ.estado = PJ.sanear(PJ.completar(lido));
+    return false; // não é a primeira vez
+  }
+  PJ.deOndeVeio = 'novo';
+  PJ.estado = PJ.estadoNovo();
+  return true; // primeira vez
+};
+
+// Vasculha o aparelho atrás de qualquer time guardado por este aplicativo,
+// inclusive de versões antigas e de gravações que deram errado.
+PJ.procurarTimes = function () {
+  var achados = [];
+  try {
+    for (var i = 0; i < window.localStorage.length; i++) {
+      var chave = window.localStorage.key(i);
+      if (!chave || chave.indexOf('planodejogo') !== 0) continue;
+      var lido = interpretar(window.localStorage.getItem(chave), null);
+      if (!lido) continue;
+      achados.push({
+        chave: chave,
+        nome: String(lido.nomeTime || 'Time sem nome'),
+        quantos: lido.elenco.length,
+        proprios: lido.elenco.filter(function (j) { return !j.exemplo; }).length,
+        quando: lido.atualizadoEm || '',
+        emUso: chave === PJ.CHAVE,
+        dados: lido,
+      });
+    }
+  } catch (err) { /* armazenamento bloqueado */ }
+  return achados;
+};
+
+// Não deixa número estragado entrar: x ou y virando NaN faz o jogador
+// sumir da tela sem nenhum aviso.
+PJ.sanear = function (e) {
+  var num = function (v, padrao) {
+    var n = Number(v);
+    return Number.isFinite(n) ? PJ.limitar(n, 0, 100) : padrao;
+  };
+  PJ.ORDEM_MODALIDADES.forEach(function (id) {
+    var c = e.campos[id];
+    c.emCampo.forEach(function (p) {
+      p.x = num(p.x, 50);
+      p.y = num(p.y, 50);
+      delete p.sigla;
+    });
+    c.adversarios = c.adversarios.filter(function (a) {
+      a.x = num(a.x, 50); a.y = num(a.y, 50);
+      return true;
+    });
+    c.setas = c.setas.filter(function (s) {
+      if (!s || !Array.isArray(s.pontos) || s.pontos.length < 2) return false;
+      s.pontos = s.pontos.map(function (p) { return [num(p[0], 50), num(p[1], 50)]; });
+      return true;
+    });
+    if (c.base) {
+      c.base.forEach(function (p) { p.x = num(p.x, 50); p.y = num(p.y, 50); });
+    }
+  });
+  e.elenco.forEach(function (j) {
+    if (!PJ.POSICOES[j.posicao]) j.posicao = 'MEI';
+    j.nome = String(j.nome == null ? 'Jogador' : j.nome).slice(0, 40) || 'Jogador';
+    var n = parseInt(j.numero, 10);
+    j.numero = Number.isFinite(n) ? PJ.limitar(n, 0, 99) : 0;
+  });
+  return e;
+};
+
+// Preenche o que faltar em um estado antigo, para uma versão nova do
+// aplicativo nunca quebrar o time de ninguém.
+PJ.completar = function (e) {
+  var base = PJ.estadoNovo();
+  if (typeof e.nomeTime !== 'string') e.nomeTime = base.nomeTime;
+  if (!PJ.MODALIDADES[e.modalidade]) e.modalidade = 'campo11';
+  if (!Array.isArray(e.elenco) || !e.elenco.length) e.elenco = base.elenco;
+  if (!e.campos) e.campos = {};
+  if (typeof e.proximoId !== 'number') e.proximoId = e.elenco.length + 1;
+  if (!Array.isArray(e.taticas)) e.taticas = [];
+  // o capitão tem que ser alguém que ainda está no time
+  if (e.capitao && !e.elenco.some(function (j) { return j.id === e.capitao; })) e.capitao = null;
+  if (!Array.isArray(e.comissao)) {
+    e.comissao = PJ.CARGOS_PADRAO.map(function (cargo) { return { cargo: cargo, nome: '' }; });
+  }
+  e.comissao = e.comissao.filter(function (c) { return c && typeof c.cargo === 'string'; })
+    .map(function (c) {
+      return { cargo: String(c.cargo).slice(0, 30), nome: String(c.nome || '').slice(0, 40) };
+    }).slice(0, 12);
+  if (!e.jogo) e.jogo = base.jogo;
+  if (!Array.isArray(e.jogo.registro)) e.jogo.registro = [];
+  if (typeof e.dicas !== 'number') e.dicas = 99;
+  if (typeof e.tela !== 'string') e.tela = 'auto';
+  e.elenco.forEach(function (j) {
+    if (!PJ.POSICOES[j.posicao]) j.posicao = 'MEI';
+  });
+  // Marca jogador por jogador quem ainda é do time de exemplo. Quem o
+  // treinador renomeou, renumerou ou mudou de posição JAMAIS é marcado —
+  // é time dele e não pode sumir por causa de uma limpeza automática.
+  var temMarca = e.elenco.some(function (j) { return typeof j.exemplo === 'boolean'; });
+  if (!temMarca) {
+    e.elenco.forEach(function (j, i) {
+      var molde = PJ.ELENCO_EXEMPLO[i];
+      j.exemplo = !!(e.exemplo && molde && j.nome === molde.nome);
+      // quem ainda é de exemplo recebe a numeração corrigida
+      if (j.exemplo) j.numero = molde.numero;
+    });
+  }
+  e.exemplo = e.elenco.some(function (j) { return j.exemplo; });
+  PJ.ORDEM_MODALIDADES.forEach(function (id) {
+    var c = e.campos[id];
+    if (!c || !Array.isArray(c.emCampo)) {
+      e.campos[id] = campoVazio(id, e.elenco);
+      return;
+    }
+    if (!Array.isArray(c.setas)) c.setas = [];
+    if (!Array.isArray(c.adversarios)) c.adversarios = [];
+    if (typeof c.estilo !== 'string') c.estilo = 'padrao';
+    // tira jogador que não existe mais no elenco
+    c.emCampo = c.emCampo.filter(function (p) {
+      return e.elenco.some(function (j) { return j.id === p.id; });
+    });
+  });
+  return e;
+};
+
+function gravarAgora() {
+  if (agendaSalvar) { window.clearTimeout(agendaSalvar); agendaSalvar = null; }
+  PJ.estado.atualizadoEm = new Date().toISOString();
+  var texto = JSON.stringify(PJ.estado);
+  var r = escrever(PJ.CHAVE, texto);
+  if (r === 'cheio') {
+    // faz espaço tirando o que é descartável, nunca o elenco
+    PJ.estado.jogo.registro = PJ.estado.jogo.registro.slice(-20);
+    PJ.estado.taticas = PJ.estado.taticas.slice(-20);
+    texto = JSON.stringify(PJ.estado);
+    r = escrever(PJ.CHAVE, texto);
+  }
+  // segunda via: se a gravação principal se perder, o time continua aqui
+  if (r === true) escrever(PJ.CHAVE_COPIA, texto);
+  PJ.avisarSalvo(r === true);
+}
+
+PJ.salvar = function () {
+  if (agendaSalvar) window.clearTimeout(agendaSalvar);
+  agendaSalvar = window.setTimeout(gravarAgora, 300);
+};
+
+// O celular pode ir para segundo plano a qualquer momento: grava na hora.
+PJ.ligarGravacaoSegura = function () {
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'hidden') gravarAgora();
+  });
+  window.addEventListener('pagehide', gravarAgora);
+};
+
+// ------------------------------------------------------------- desfazer
+
+PJ.antes = function (rotulo) {
+  pilhaDesfazer.push({ rotulo: rotulo, estado: copia(PJ.estado) });
+  if (pilhaDesfazer.length > LIMITE_DESFAZER) pilhaDesfazer.shift();
+  PJ.atualizarDesfazer();
+};
+
+PJ.temDesfazer = function () {
+  return pilhaDesfazer.length > 0;
+};
+
+PJ.ultimoRotulo = function () {
+  return pilhaDesfazer.length ? pilhaDesfazer[pilhaDesfazer.length - 1].rotulo : '';
+};
+
+PJ.desfazer = function () {
+  if (!pilhaDesfazer.length) return null;
+  var passo = pilhaDesfazer.pop();
+  PJ.estado = passo.estado;
+  PJ.salvar();
+  PJ.atualizarDesfazer();
+  return passo.rotulo;
+};
+
+// -------------------------------------------------------------- atalhos
+
+PJ.campo = function () {
+  return PJ.estado.campos[PJ.estado.modalidade];
+};
+
+PJ.modalidade = function () {
+  return PJ.MODALIDADES[PJ.estado.modalidade];
+};
+
+PJ.jogadorPorId = function (id) {
+  for (var i = 0; i < PJ.estado.elenco.length; i++) {
+    if (PJ.estado.elenco[i].id === id) return PJ.estado.elenco[i];
+  }
+  return null;
+};
+
+PJ.estaEmCampo = function (id) {
+  return PJ.campo().emCampo.some(function (p) { return p.id === id; });
+};
+
+PJ.banco = function () {
+  return PJ.estado.elenco.filter(function (j) { return !PJ.estaEmCampo(j.id); });
+};
+
+// Sugere a camisa que combina com a posição: o lateral-esquerdo nasce 6,
+// o direito 2, o volante 5. Se o número já estiver com alguém, cai para a
+// segunda opção e depois para o primeiro livre.
+PJ.numeroParaPosicao = function (sigla) {
+  var pos = PJ.POSICOES[sigla];
+  if (!pos) return PJ.proximoNumero();
+  var usados = {};
+  PJ.estado.elenco.forEach(function (j) { usados[j.numero] = true; });
+  if (pos.camisa && !usados[pos.camisa]) return pos.camisa;
+  if (pos.camisa2 && !usados[pos.camisa2]) return pos.camisa2;
+  return PJ.proximoNumero();
+};
+
+// Quantos nomes de exemplo ainda estão na lista, sem ninguém ter mexido.
+PJ.ehCapitao = function (id) {
+  return !!id && PJ.estado.capitao === id;
+};
+
+// Um capitão só: escolher outro passa a faixa.
+PJ.definirCapitao = function (id) {
+  PJ.antes('capitão do time');
+  PJ.estado.capitao = PJ.estado.capitao === id ? null : id;
+  PJ.marcarComoMeu(PJ.jogadorPorId(id));
+};
+
+PJ.quantosDeExemplo = function () {
+  return PJ.estado.elenco.filter(function (j) { return j.exemplo; }).length;
+};
+
+// Qualquer mexida num jogador faz dele um jogador do treinador.
+PJ.marcarComoMeu = function (j) {
+  if (j) j.exemplo = false;
+};
+
+PJ.proximoNumero = function () {
+  var usados = {};
+  PJ.estado.elenco.forEach(function (j) { usados[j.numero] = true; });
+  for (var n = 1; n < 100; n++) if (!usados[n]) return n;
+  return 0;
+};
+
+// ----------------------------------------- formações, vagas e estilos
+
+PJ.limitar = function (v, min, max) {
+  return Math.max(min, Math.min(max, v));
+};
+
+PJ.ehGoleiro = function (idJogador) {
+  var j = PJ.jogadorPorId(idJogador);
+  return !!(j && j.posicao === 'GOL');
+};
+
+// Encaixa quem ESTÁ em campo agora nas vagas de um desenho. Ninguém entra,
+// ninguém sai: cada jogador vai para a vaga mais perto de onde já estava,
+// com preferência para a vaga da posição dele.
+PJ.encaixarNasVagas = function (vagas) {
+  var c = PJ.campo();
+  var sobrando = c.emCampo.slice();
+  var pares = [];
+  vagas.forEach(function (v, iv) {
+    sobrando.forEach(function (p, ip) {
+      var j = PJ.jogadorPorId(p.id) || {};
+      var mesma = j.posicao === v.sigla ? 0 : 1;
+      var d = Math.sqrt(Math.pow(p.x - v.x, 2) + Math.pow(p.y - v.y, 2));
+      pares.push({ iv: iv, ip: ip, custo: mesma * 22 + d });
+    });
+  });
+  pares.sort(function (a, b) { return a.custo - b.custo; });
+
+  var vagaOcupada = {};
+  var jaColocado = {};
+  var novo = [];
+  pares.forEach(function (par) {
+    if (vagaOcupada[par.iv] || jaColocado[par.ip]) return;
+    vagaOcupada[par.iv] = true;
+    jaColocado[par.ip] = true;
+    var v = vagas[par.iv];
+    var p = sobrando[par.ip];
+    novo.push({ id: p.id, x: v.x, y: v.y });
+    var j = PJ.jogadorPorId(p.id);
+    if (j && !PJ.POSICOES[j.posicao]) j.posicao = v.sigla;
+  });
+  // se houver mais gente em campo que vagas, quem sobrou fica onde estava
+  sobrando.forEach(function (p, ip) { if (!jaColocado[ip]) novo.push(p); });
+
+  c.emCampo = novo;
+  c.base = null;
+  return vagas.length - novo.filter(function (p, i) { return i < vagas.length; }).length;
+};
+
+PJ.formacaoPorId = function (id) {
+  var m = PJ.modalidade();
+  for (var i = 0; i < m.formacoes.length; i++) if (m.formacoes[i].id === id) return m.formacoes[i];
+  return m.formacoes[0];
+};
+
+PJ.vagasDaFormacao = function (f) {
+  return f.jogadores.map(function (slot) {
+    return { sigla: slot[0], x: slot[1], y: slot[2] };
+  });
+};
+
+PJ.aplicarFormacao = function (idFormacao) {
+  var c = PJ.campo();
+  var f = PJ.formacaoPorId(idFormacao);
+  PJ.encaixarNasVagas(PJ.vagasDaFormacao(f));
+  c.formacao = f.id;
+  c.estilo = 'padrao';
+};
+
+// Afasta quem ficou colado depois de mexer no time todo de uma vez.
+// A conta leva em conta que o campo é mais alto do que largo.
+function afastarColados(lista, m) {
+  var minimo = 17;
+  var borda = m.margemLateral;
+  for (var passo = 0; passo < 2; passo++) {
+    for (var a = 0; a < lista.length; a++) {
+      for (var b = a + 1; b < lista.length; b++) {
+        var pa = lista[a];
+        var pb = lista[b];
+        var dx = pa.x - pb.x;
+        var dy = (pa.y - pb.y) / m.proporcao;
+        var d = Math.sqrt(dx * dx + dy * dy);
+        if (d >= minimo) continue;
+        var falta = (minimo - d) / 2;
+        var sinal = dx === 0 ? (a % 2 === 0 ? 1 : -1) : (dx > 0 ? 1 : -1);
+        pa.x = PJ.limitar(pa.x + sinal * falta, borda, 100 - borda);
+        pb.x = PJ.limitar(pb.x - sinal * falta, borda, 100 - borda);
+      }
+    }
+  }
+}
+
+// O estilo de jogo mexe o time inteiro de uma vez, sempre a partir do
+// desenho guardado, para o efeito nunca acumular.
+PJ.aplicarEstilo = function (idEstilo) {
+  var c = PJ.campo();
+  var m = PJ.modalidade();
+  var est = PJ.estiloPorId(idEstilo);
+  if (!c.base) c.base = copia(c.emCampo);
+
+  var linha = c.base.filter(function (p) { return !PJ.ehGoleiro(p.id); });
+  if (!linha.length) { c.estilo = idEstilo; return; }
+  var centro = linha.reduce(function (soma, p) { return soma + p.y; }, 0) / linha.length;
+
+  // quem é o homem da frente, para o contra-ataque esticar só ele
+  var naFrente = {};
+  if (est.esticaFrente) {
+    var quantos = m.emCampo >= 7 ? 2 : 1;
+    linha.slice().sort(function (a, b) { return b.y - a.y; }).slice(0, quantos)
+      .forEach(function (p) { naFrente[p.id] = true; });
+  }
+
+  c.emCampo = c.base.map(function (p) {
+    var novo = { id: p.id, x: p.x, y: p.y };
+    if (PJ.ehGoleiro(p.id)) {
+      novo.y = PJ.limitar(p.y + est.desloca * 0.3, 6, 45);
+      return novo;
+    }
+    novo.x = PJ.limitar(50 + (p.x - 50) * est.abre, m.margemLateral, 100 - m.margemLateral);
+    var y = centro + (p.y - centro) * est.compacta + est.desloca;
+    if (naFrente[p.id]) y += est.esticaFrente;
+    novo.y = PJ.limitar(y, 8, m.alturaMaxima);
+    return novo;
+  });
+
+  afastarColados(c.emCampo, m);
+  c.estilo = idEstilo;
+};
+
+// Quando o treinador arrasta alguém na mão, o desenho guardado passa a ser
+// o que está na tela: o próximo estilo parte dali.
+PJ.fixarComoBase = function () {
+  PJ.campo().base = copia(PJ.campo().emCampo);
+};
+
+/* ===== 20-campo.js ===== */
+// Desenha o campo. As mesmas figuras servem para a tela (SVG) e para a
+// foto que o treinador manda no WhatsApp (canvas) — a conta e uma só.
+
+PJ.LINHA_FINA = 0.8;   // espessura em % da largura do campo
+PJ.LINHA_MEIO = 1.15;  // a linha do meio e mais grossa, igual ao desenho a mão
+
+// Converte a coordenada do campo (y=0 no nosso gol) para a do desenho,
+// onde o y cresce para baixo.
+PJ.paraDesenho = function (m, x, y) {
+  return [x, ((100 - y) * m.alturaVB) / 100];
+};
+
+function numero(n) {
+  return Math.round(n * 1000) / 1000;
+}
+
+PJ.campoEmSVG = function (m) {
+  var s = [];
+  var conv = function (x, y) { return PJ.paraDesenho(m, x, y); };
+  var raioY = function (r) { return (r * m.alturaVB) / 100; };
+
+  m.figuras.forEach(function (fig) {
+    if (fig.tipo === 'retangulo') {
+      var a = conv(fig.x, fig.y + fig.altura);
+      s.push('<rect x="' + numero(a[0]) + '" y="' + numero(a[1]) +
+        '" width="' + numero(fig.largura) + '" height="' + numero(raioY(fig.altura)) +
+        '" class="cal"/>');
+    } else if (fig.tipo === 'linha') {
+      var p1 = conv(fig.x1, fig.y1);
+      var p2 = conv(fig.x2, fig.y2);
+      s.push('<line x1="' + numero(p1[0]) + '" y1="' + numero(p1[1]) +
+        '" x2="' + numero(p2[0]) + '" y2="' + numero(p2[1]) +
+        '" class="' + (fig.papel === 'meio' ? 'cal meio' : 'cal') + '"/>');
+    } else if (fig.tipo === 'circulo') {
+      var c = conv(fig.cx, fig.cy);
+      s.push('<circle cx="' + numero(c[0]) + '" cy="' + numero(c[1]) +
+        '" r="' + numero(fig.r) + '" class="cal' + (fig.papel === 'fraco' ? ' fraca' : '') + '"/>');
+    } else if (fig.tipo === 'disco') {
+      var d = conv(fig.cx, fig.cy);
+      s.push('<circle cx="' + numero(d[0]) + '" cy="' + numero(d[1]) +
+        '" r="' + numero(fig.r) + '" class="calCheia"/>');
+    } else if (fig.tipo === 'poligonal') {
+      var pts = fig.pontos.map(function (p) {
+        var q = conv(p[0], p[1]);
+        return numero(q[0]) + ',' + numero(q[1]);
+      }).join(' ');
+      s.push('<polyline points="' + pts + '" class="cal"/>');
+    } else if (fig.tipo === 'gol') {
+      // a boca do gol é desenhada por DENTRO da linha de fundo: assim ela
+      // aparece inteira em qualquer tela, sem ser cortada pela borda
+      var fundo = conv(0, fig.y)[1];
+      var dentroY = fig.dentro > 0 ? fundo - raioY(2.4) : fundo + raioY(2.4);
+      var topo = Math.min(fundo, dentroY);
+      var alt = Math.abs(dentroY - fundo);
+      s.push('<rect x="' + numero(fig.x1) + '" y="' + numero(topo) +
+        '" width="' + numero(fig.x2 - fig.x1) + '" height="' + numero(alt) + '" class="gol"/>');
+      for (var i = 1; i < 5; i++) {
+        var gx = fig.x1 + ((fig.x2 - fig.x1) * i) / 5;
+        s.push('<line x1="' + numero(gx) + '" y1="' + numero(topo) +
+          '" x2="' + numero(gx) + '" y2="' + numero(topo + alt) + '" class="rede"/>');
+      }
+    }
+  });
+  return s.join('');
+};
+
+PJ.montarCampoSVG = function (svg, m) {
+  svg.setAttribute('viewBox', '0 0 100 ' + numero(m.alturaVB));
+  svg.setAttribute('preserveAspectRatio', 'none');
+  svg.innerHTML = PJ.campoEmSVG(m);
+};
+
+// ----------------------------------------------------- foto para o WhatsApp
+
+PJ.desenharCampoCanvas = function (ctx, ox, oy, larg, alt, m, cores) {
+  var conv = function (x, y) {
+    return [ox + (x / 100) * larg, oy + ((100 - y) / 100) * alt];
+  };
+  var u = larg / 100; // 1 unidade do campo em pixels
+
+  ctx.save();
+  ctx.fillStyle = cores.grama;
+  ctx.fillRect(ox, oy, larg, alt);
+  if (m.superficie === 'grama') {
+    ctx.fillStyle = cores.gramaFaixa;
+    for (var k = 0; k < 8; k += 2) {
+      ctx.fillRect(ox, oy + (alt * k) / 8, larg, alt / 8);
+    }
+  }
+
+  ctx.lineCap = 'butt';
+  ctx.lineJoin = 'round';
+  m.figuras.forEach(function (fig) {
+    ctx.strokeStyle = fig.papel === 'meio' ? cores.meio : cores.cal;
+    ctx.fillStyle = cores.cal;
+    ctx.lineWidth = (fig.papel === 'meio' ? PJ.LINHA_MEIO : PJ.LINHA_FINA) * u;
+    ctx.globalAlpha = fig.papel === 'fraco' ? 0.45 : 1;
+    ctx.beginPath();
+    if (fig.tipo === 'retangulo') {
+      var a = conv(fig.x, fig.y + fig.altura);
+      ctx.rect(a[0], a[1], fig.largura * u, (fig.altura / 100) * alt);
+      ctx.stroke();
+    } else if (fig.tipo === 'linha') {
+      var p1 = conv(fig.x1, fig.y1);
+      var p2 = conv(fig.x2, fig.y2);
+      ctx.moveTo(p1[0], p1[1]);
+      ctx.lineTo(p2[0], p2[1]);
+      ctx.stroke();
+    } else if (fig.tipo === 'circulo') {
+      var c = conv(fig.cx, fig.cy);
+      ctx.arc(c[0], c[1], fig.r * u, 0, Math.PI * 2);
+      ctx.stroke();
+    } else if (fig.tipo === 'disco') {
+      var d = conv(fig.cx, fig.cy);
+      ctx.arc(d[0], d[1], Math.max(1.5, fig.r * u), 0, Math.PI * 2);
+      ctx.fill();
+    } else if (fig.tipo === 'poligonal') {
+      fig.pontos.forEach(function (p, i) {
+        var q = conv(p[0], p[1]);
+        if (i === 0) ctx.moveTo(q[0], q[1]); else ctx.lineTo(q[0], q[1]);
+      });
+      ctx.stroke();
+    } else if (fig.tipo === 'gol') {
+      var fundo = conv(0, fig.y)[1];
+      var espessura = (2.4 / 100) * alt;
+      var topo = fig.dentro > 0 ? fundo - espessura : fundo;
+      ctx.fillStyle = cores.cal;
+      ctx.globalAlpha = 0.9;
+      ctx.fillRect(conv(fig.x1, 0)[0], topo, (fig.x2 - fig.x1) * u, espessura);
+    }
+    ctx.globalAlpha = 1;
+  });
+  ctx.restore();
+};
+
+/* ===== 30-jogadores.js ===== */
+// As pecas dos jogadores em cima do campo e o arrastar com o dedo.
+// Regra de ouro: o aplicativo só conhece porcentagem (0 a 100).
+// Pixel só existe dentro do gesto e morre quando o dedo solta.
+
+PJ.selecionado = null;   // id do jogador escolhido para a troca
+PJ.elPalco = null;
+PJ.elPecas = null;
+
+var gesto = null;        // arraste em andamento
+var retangulo = null;    // medida do campo, guardada uma vez só
+var cliqueMorto = false;
+
+PJ.primeiroNome = function (nome) {
+  var limpo = String(nome || '').trim().replace(/\s+/g, ' ');
+  var curto = limpo.split(' ')[0] || 'Jogador';
+  return curto.length > 9 ? curto.slice(0, 9) : curto;
+};
+
+PJ.medirPalco = function () {
+  retangulo = PJ.elPalco.getBoundingClientRect();
+  return retangulo;
+};
+
+function rect() {
+  if (!retangulo || !retangulo.width) PJ.medirPalco();
+  return retangulo;
+}
+
+function pontoParaCampo(clientX, clientY) {
+  var r = rect();
+  return {
+    x: ((clientX - r.left) / r.width) * 100,
+    y: 100 - ((clientY - r.top) / r.height) * 100,
+  };
+}
+PJ.pontoParaCampo = pontoParaCampo;
+
+var arred = function (v) { return Math.round(v * 10) / 10; };
+
+// ------------------------------------------------------------ desenhar
+
+function criarPeca(dados) {
+  var el = document.createElement('button');
+  el.type = 'button';
+  el.className = 'peca' + (dados.adversario ? ' adversaria' : '');
+  el.dataset.id = dados.id;
+  if (dados.adversario) el.dataset.adversario = '1';
+  el.style.setProperty('--x', arred(dados.x) + '%');
+  el.style.setProperty('--y', arred(100 - dados.y) + '%');
+  // perto da lateral, a plaquinha do nome entra para dentro do campo
+
+
+  var disco = document.createElement('span');
+  disco.className = 'disco';
+  if (!dados.adversario) {
+    var sigla = document.createElement('span');
+    sigla.className = 'sigla';
+    sigla.textContent = dados.sigla;
+    disco.appendChild(sigla);
+  }
+  var num = document.createElement('span');
+  num.className = 'num';
+  num.textContent = dados.numero == null ? '' : String(dados.numero);
+  disco.appendChild(num);
+  el.appendChild(disco);
+
+  if (dados.capitao) {
+    var faixa = document.createElement('span');
+    faixa.className = 'faixa';
+    faixa.textContent = 'C';
+    faixa.setAttribute('aria-hidden', 'true');
+    el.appendChild(faixa);
+  }
+
+  if (dados.adversario) {
+    el.setAttribute('aria-label', 'Adversário ' + dados.numero + '. Arraste para mudar de lugar.');
+  } else {
+    var placa = dados.placa && dados.placa.oculta ? null : document.createElement('span');
+    if (placa) {
+    placa.className = 'placa';
+    placa.textContent = PJ.primeiroNome(dados.nome);
+    if (dados.placa) {
+      placa.style.maxWidth = Math.round(dados.placa.largura) + 'px';
+      placa.style.left = Math.round(dados.placa.esquerda) + 'px';
+      placa.style.fontSize = dados.placa.letra + 'px';
+      if (dados.placa.acima) el.dataset.placa = 'acima';
+    }
+    el.appendChild(placa);
+    }
+    el.setAttribute('aria-label', dados.nome + ', ' +
+      (PJ.POSICOES[dados.sigla] ? PJ.POSICOES[dados.sigla].nome : dados.sigla) +
+      ', camisa ' + dados.numero + (dados.capitao ? ', capitão' : '') +
+      '. Arraste para mudar de lugar.');
+  }
+  return el;
+}
+
+PJ.desenharPecas = function () {
+  var c = PJ.campo();
+  var m = PJ.modalidade();
+  var novo = document.createDocumentFragment();
+  var placas = medidasDaPlaca(c.emCampo, PJ.elPalco.clientWidth || 340,
+    PJ.elPalco.clientHeight || 520, tamanhoDoDisco());
+
+  c.emCampo.forEach(function (p) {
+    var j = PJ.jogadorPorId(p.id);
+    if (!j) return;
+    var el = criarPeca({
+      id: p.id, x: p.x, y: p.y, sigla: j.posicao,
+      numero: j.numero, nome: j.nome, placa: placas[p.id],
+      capitao: PJ.ehCapitao(p.id),
+    });
+    if (PJ.selecionado === p.id) el.classList.add('escolhida');
+    novo.appendChild(el);
+  });
+
+  if (PJ.estado.adversario) {
+    c.adversarios.forEach(function (a, i) {
+      novo.appendChild(criarPeca({ id: 'adv' + i, x: a.x, y: a.y, numero: a.n, adversario: true }));
+    });
+  }
+
+  PJ.elPecas.textContent = '';
+  PJ.elPecas.appendChild(novo);
+};
+
+PJ.montarAdversarios = function () {
+  var c = PJ.campo();
+  var m = PJ.modalidade();
+  if (c.adversarios.length === m.emCampo) return;
+  var f = m.formacoes[0];
+  c.adversarios = f.jogadores.map(function (slot, i) {
+    return { n: i + 1, x: 100 - slot[1], y: 100 - slot[2] };
+  });
+};
+
+function tamanhoDoDisco() {
+  var v = parseFloat(getComputedStyle(PJ.elPalco).getPropertyValue('--disco'));
+  return Number.isFinite(v) ? v : 52;
+}
+
+// Numa fileira de quatro zagueiros as plaquinhas de nome se encavalam, e
+// a do lateral ainda cai para fora do campo. Cada plaquinha ganha aqui uma
+// faixa própria — do meio do caminho até o vizinho da esquerda ao meio do
+// caminho até o da direita, sem passar da linha lateral. Quando o time
+// fica muito apertado a letra diminui, mas um nome nunca cobre o outro.
+var ALTURA_PLACA = 24;
+
+PJ.medidasDaPlaca = function () {
+  return medidasDaPlaca.apply(null, arguments);
+};
+
+function medidasDaPlaca(lista, larguraCampo, alturaCampo, disco, alturaPlaca) {
+  var altura = alturaPlaca || ALTURA_PLACA;
+  var folgaMinima = altura < 40 ? 30 : altura * 0.9;
+  // 1) onde cada nome vai ficar: embaixo do disco, ou em cima dele quando
+  //    o jogador está colado na linha de fundo
+  var pontos = lista.map(function (p) {
+    var cy = ((100 - p.y) / 100) * alturaCampo;
+    var acima = cy + disco / 2 + 4 + altura > alturaCampo;
+    var topo = acima ? cy - disco / 2 - 4 - altura : cy + disco / 2 + 4;
+    return {
+      id: p.id,
+      cx: (p.x / 100) * larguraCampo,
+      acima: acima,
+      topo: topo,
+      base: topo + altura,
+    };
+  });
+
+  // 2) cada nome só disputa espaço com quem ficou na mesma altura de tela
+  var medidas = {};
+  pontos.forEach(function (p) {
+    var limEsq = 2;
+    var limDir = larguraCampo - 2;
+    pontos.forEach(function (o) {
+      if (o === p) return;
+      if (o.base <= p.topo || o.topo >= p.base) return;  // alturas não se cruzam
+      // quando dois estão na mesma coluna (goleiro e zagueiro central, por
+      // exemplo) o desempate é pelo id, senão nenhum dos dois cede espaço
+      var ehEsquerda = o.cx < p.cx || (o.cx === p.cx && o.id < p.id);
+      if (ehEsquerda) limEsq = Math.max(limEsq, (o.cx + p.cx) / 2 + 3);
+      else limDir = Math.min(limDir, (o.cx + p.cx) / 2 - 3);
+    });
+    var folga = limDir - limEsq;
+    // sem espaço nem para duas letras, o nome sai de cena em vez de cobrir
+    // o do companheiro — o disco continua mostrando número e posição, e o
+    // nome inteiro aparece ao tocar no jogador
+    if (folga < folgaMinima) { medidas[p.id] = { oculta: true, acima: p.acima }; return; }
+    var largura = Math.min(folga, altura < 40 ? 104 : altura * 4.4);
+    var esquerda = PJ.limitar(p.cx - largura / 2, limEsq, limDir - largura);
+    medidas[p.id] = {
+      largura: largura,
+      esquerda: esquerda - (p.cx - disco / 2),
+      esquerdaNoCampo: esquerda,
+      topo: p.topo,
+      letra: largura < 44 ? 10 : (largura < 58 ? 11 : 12.5),
+      acima: p.acima,
+    };
+  });
+  return medidas;
+}
+
+// ------------------------------------------------------------- arrastar
+
+var LIMIAR = 7; // px antes de virar arraste, para mão tremida ou com luva
+
+function acharEmCampo(id) {
+  var lista = PJ.campo().emCampo;
+  for (var i = 0; i < lista.length; i++) if (lista[i].id === id) return lista[i];
+  return null;
+}
+
+function margens(el) {
+  var r = rect();
+  var t = el.getBoundingClientRect();
+  return {
+    x: ((t.width / 2) / r.width) * 100,
+    y: ((t.height / 2) / r.height) * 100,
+  };
+}
+
+function comecarArraste(ev) {
+  var el = ev.target.closest('.peca');
+  if (!el) return;
+
+  var adversario = el.dataset.adversario === '1';
+  var alvo = adversario
+    ? PJ.campo().adversarios[parseInt(el.dataset.id.slice(3), 10)]
+    : acharEmCampo(el.dataset.id);
+  if (!alvo) return;
+
+  PJ.medirPalco();
+  var m = margens(el);
+  gesto = {
+    tipo: 'peca',
+    pid: ev.pointerId,
+    el: el,
+    id: el.dataset.id,
+    adversario: adversario,
+    alvo: alvo,
+    x0: alvo.x,
+    y0: alvo.y,
+    px0: ev.clientX,
+    py0: ev.clientY,
+    margemX: m.x,
+    margemY: m.y,
+    moveu: false,
+    atual: { x: alvo.x, y: alvo.y },
+    quadro: 0,
+    ultimo: null,
+  };
+  try { el.setPointerCapture(ev.pointerId); } catch (err) { /* segue sem captura */ }
+  el.style.willChange = 'transform';
+  ev.preventDefault();
+}
+
+function pintar() {
+  if (!gesto || gesto.tipo !== 'peca') return;
+  gesto.quadro = 0;
+  var ev = gesto.ultimo;
+  if (!ev) return;
+  var r = rect();
+
+  var dxPx = ev.clientX - gesto.px0;
+  var dyPx = ev.clientY - gesto.py0;
+  if (!gesto.moveu && Math.sqrt(dxPx * dxPx + dyPx * dyPx) > LIMIAR) {
+    gesto.moveu = true;
+    gesto.el.classList.add('carregando');
+    PJ.marcarOrigem(gesto.x0, gesto.y0);
+    PJ.vibrar(15);
+  }
+  if (!gesto.moveu) return;
+
+  var px = PJ.limitar(gesto.x0 + (dxPx / r.width) * 100, gesto.margemX, 100 - gesto.margemX);
+  var py = PJ.limitar(gesto.y0 - (dyPx / r.height) * 100, gesto.margemY, 100 - gesto.margemY);
+  gesto.atual = { x: px, y: py };
+
+  var mostraX = ((px - gesto.x0) / 100) * r.width;
+  var mostraY = (-(py - gesto.y0) / 100) * r.height;
+  gesto.el.style.transform =
+    'translate(-50%,-50%) translate3d(' + mostraX + 'px,' + mostraY + 'px,0) scale(1.1)';
+}
+
+function seguirArraste(ev) {
+  if (!gesto || gesto.tipo !== 'peca' || ev.pointerId !== gesto.pid) return;
+  ev.preventDefault();
+  gesto.ultimo = ev;
+  if (!gesto.quadro) gesto.quadro = window.requestAnimationFrame(pintar);
+}
+
+function soltarArraste(ev) {
+  if (!gesto || gesto.tipo !== 'peca' || ev.pointerId !== gesto.pid) return;
+  var g = gesto;
+  var noBanco = !g.adversario && g.moveu && PJ.soltouNoBanco(ev.clientX, ev.clientY);
+  encerrarGesto();
+
+  if (!g.moveu) {                       // foi só um toque: escolhe o jogador
+    if (!g.adversario) PJ.escolherJogador(g.id);
+    else PJ.desenharPecas();
+    return;
+  }
+
+  cliqueMorto = true;
+  window.setTimeout(function () { cliqueMorto = false; }, 400);
+
+  if (noBanco) {
+    PJ.antes('tirar do campo');
+    var j = PJ.jogadorPorId(g.id);
+    PJ.tirarDoCampo(g.id);
+    PJ.atualizar();
+    PJ.aviso(PJ.primeiroNome(j ? j.nome : '') + ' foi para o banco.', 'Desfazer', PJ.desfazerAcao);
+    return;
+  }
+
+  PJ.antes('mover jogador');
+  g.alvo.x = arred(g.atual.x);
+  g.alvo.y = arred(g.atual.y);
+  if (!g.adversario) {
+    PJ.fixarComoBase();
+    PJ.campo().estilo = 'padrao';
+  }
+  PJ.vibrar(10);
+  PJ.atualizar();
+  PJ.contarGesto('mover');
+  if (!g.adversario) PJ.ofereceTrocarPosicao(g.id, g.alvo.x, g.alvo.y);
+}
+
+// Se o sistema tomar o gesto (ligacao, notificacao, gesto de navegacao),
+// grava onde o jogador estava — nunca devolve para trás sem avisar.
+function abortarArraste(ev) {
+  if (!gesto || gesto.tipo !== 'peca') return;
+  if (ev && ev.pointerId !== gesto.pid) return;
+  var g = gesto;
+  encerrarGesto();
+  if (!g.moveu) { PJ.desenharPecas(); return; }
+  PJ.antes('mover jogador');
+  g.alvo.x = arred(g.atual.x);
+  g.alvo.y = arred(g.atual.y);
+  if (!g.adversario) PJ.fixarComoBase();
+  PJ.atualizar();
+}
+
+function encerrarGesto() {
+  if (!gesto) return;
+  var g = gesto;
+  gesto = null;                       // zera antes de mexer no elemento, senao o
+  if (g.quadro) window.cancelAnimationFrame(g.quadro); // lostpointercapture reentra
+  if (g.el) {
+    g.el.classList.remove('carregando');
+    g.el.style.transform = '';
+    g.el.style.willChange = '';
+    try { g.el.releasePointerCapture(g.pid); } catch (err) { /* já soltou */ }
+  }
+  PJ.limparOrigem();
+}
+
+PJ.soltouNoBanco = function (x, y) {
+  var el = document.elementFromPoint(x, y);
+  return !!(el && el.closest('#zonaBanco'));
+};
+
+// ---------------------------------------------------- roteador do palco
+
+PJ.ligarGestos = function () {
+  PJ.elPalco.addEventListener('pointerdown', function (ev) {
+    if (!ev.isPrimary) return;                                   // ignora segundo dedo
+    if (ev.pointerType === 'mouse' && ev.button !== 0) return;
+    if (gesto) return;
+    if (PJ.modoDesenho) { PJ.desenhoComecar(ev); return; }
+    comecarArraste(ev);
+  }, { passive: false });
+
+  PJ.elPalco.addEventListener('pointermove', function (ev) {
+    if (!gesto) { PJ.desenhoSeguir(ev); return; }
+    seguirArraste(ev);
+  }, { passive: false });
+
+  PJ.elPalco.addEventListener('pointerup', function (ev) {
+    if (!gesto) { PJ.desenhoTerminar(ev); return; }
+    soltarArraste(ev);
+  });
+
+  PJ.elPalco.addEventListener('pointercancel', function (ev) {
+    if (!gesto) { PJ.desenhoCancelar(ev); return; }
+    abortarArraste(ev);
+  });
+  PJ.elPalco.addEventListener('lostpointercapture', function (ev) { abortarArraste(ev); });
+  PJ.elPalco.addEventListener('contextmenu', function (ev) { ev.preventDefault(); });
+  PJ.elPalco.addEventListener('dragstart', function (ev) { ev.preventDefault(); });
+
+  // mata o clique fantasma que o navegador manda depois de um arraste
+  PJ.elPalco.addEventListener('click', function (ev) {
+    if (cliqueMorto) { ev.stopPropagation(); ev.preventDefault(); cliqueMorto = false; }
+  }, true);
+
+  // teclado: mover o jogador com as setas
+  PJ.elPecas.addEventListener('keydown', function (ev) {
+    var el = ev.target.closest('.peca');
+    if (!el) return;
+    var passo = ev.shiftKey ? 6 : 2;
+    var d = { ArrowLeft: [-passo, 0], ArrowRight: [passo, 0], ArrowUp: [0, passo], ArrowDown: [0, -passo] }[ev.key];
+    if (!d) return;
+    ev.preventDefault();
+    var adversario = el.dataset.adversario === '1';
+    var alvo = adversario
+      ? PJ.campo().adversarios[parseInt(el.dataset.id.slice(3), 10)]
+      : acharEmCampo(el.dataset.id);
+    if (!alvo) return;
+    PJ.antes('mover jogador');
+    alvo.x = arred(PJ.limitar(alvo.x + d[0], 3, 97));
+    alvo.y = arred(PJ.limitar(alvo.y + d[1], 3, 97));
+    if (!adversario) {
+      PJ.fixarComoBase();
+      var j = PJ.jogadorPorId(alvo.id);
+      PJ.anunciar((j ? j.nome : 'Jogador') + ' movido');
+    }
+    PJ.atualizar();
+    var volta = PJ.elPecas.querySelector('.peca[data-id="' + el.dataset.id + '"]');
+    if (volta) volta.focus();
+  });
+
+  // a medida do campo muda quando gira a tela, abre o teclado ou some a
+  // barra do navegador: remede nesses momentos, nunca a cada movimento
+  var remedir = function () { if (PJ.elPalco.isConnected) PJ.medirPalco(); };
+  window.addEventListener('resize', remedir);
+  window.addEventListener('orientationchange', remedir);
+  window.addEventListener('scroll', remedir, true);
+  if (window.ResizeObserver) new window.ResizeObserver(remedir).observe(PJ.elPalco);
+  if (window.visualViewport) window.visualViewport.addEventListener('resize', remedir);
+};
+
+PJ.marcarOrigem = function (x, y) {
+  var marca = document.getElementById('origem');
+  marca.style.setProperty('--x', arred(x) + '%');
+  marca.style.setProperty('--y', arred(100 - y) + '%');
+  marca.hidden = false;
+};
+PJ.limparOrigem = function () {
+  var marca = document.getElementById('origem');
+  if (marca) marca.hidden = true;
+};
+
+PJ.vibrar = function (ms) {
+  try { if (navigator.vibrate) navigator.vibrate(ms); } catch (err) { /* sem vibracao */ }
+};
+
+// ------------------------------------------------- entrar, sair e trocar
+
+PJ.tirarDoCampo = function (id) {
+  var c = PJ.campo();
+  c.emCampo = c.emCampo.filter(function (p) { return p.id !== id; });
+  c.base = null;
+  if (PJ.selecionado === id) PJ.selecionado = null;
+};
+
+PJ.colocarEmCampo = function (id) {
+  var c = PJ.campo();
+  if (PJ.estaEmCampo(id)) return;
+  var vagas = PJ.vagasDaFormacao(PJ.formacaoPorId(c.formacao));
+  var jogador = PJ.jogadorPorId(id);
+  var livre = null;
+  // primeiro procura a vaga da posição dele; senão, a primeira vaga vazia
+  [true, false].forEach(function (exigirPosicao) {
+    if (livre) return;
+    for (var k = 0; k < vagas.length; k++) {
+      var v = vagas[k];
+      if (exigirPosicao && (!jogador || jogador.posicao !== v.sigla)) continue;
+      var ocupada = c.emCampo.some(function (p) {
+        return Math.abs(p.x - v.x) < 7 && Math.abs(p.y - v.y) < 7;
+      });
+      if (!ocupada) { livre = v; return; }
+    }
+  });
+  if (!livre) livre = { sigla: 'MEI', x: 50, y: 50 };
+  c.emCampo.push({ id: id, x: livre.x, y: livre.y });
+  if (jogador && !PJ.POSICOES[jogador.posicao]) jogador.posicao = livre.sigla;
+  c.base = null;
+};
+
+PJ.trocarJogador = function (idSai, idEntra) {
+  var c = PJ.campo();
+  var lugar = null;
+  for (var i = 0; i < c.emCampo.length; i++) if (c.emCampo[i].id === idSai) lugar = c.emCampo[i];
+  if (!lugar) return false;
+  lugar.id = idEntra;
+  if (c.base) c.base.forEach(function (p) { if (p.id === idSai) p.id = idEntra; });
+  // quem entra herda a posição de quem saiu, se ainda não tiver uma
+  var quemEntra = PJ.jogadorPorId(idEntra);
+  var quemSai = PJ.jogadorPorId(idSai);
+  if (quemEntra && quemSai && !PJ.POSICOES[quemEntra.posicao]) quemEntra.posicao = quemSai.posicao;
+  return true;
+};
+
+/* ===== 40-desenho.js ===== */
+// Modo desenhar: riscar setas em cima do campo, igual caneta na prancheta.
+// Os pontos são guardados em porcentagem, entao a seta nunca sai do lugar
+// quando o campo muda de tamanho ou o celular vira.
+
+PJ.modoDesenho = false;
+PJ.ferramenta = 'seta';     // seta | risco
+PJ.corSeta = 'amarelo';
+
+PJ.CORES_SETA = {
+  amarelo: '#FFD400',
+  branco: '#F5F7F0',
+  vermelho: '#D4142A',
+};
+
+var traco = null;
+var elSetas = null;
+var quadroSeta = 0;
+
+PJ.ligarDesenho = function () {
+  elSetas = document.getElementById('setas');
+};
+
+PJ.desenhoComecar = function (ev) {
+  if (!PJ.modoDesenho || traco) return;
+  var p = PJ.pontoParaCampo(ev.clientX, ev.clientY);
+  traco = {
+    tipo: PJ.ferramenta,
+    cor: PJ.corSeta,
+    pontos: [[p.x, p.y], [p.x, p.y]],
+    pid: ev.pointerId,
+  };
+  try { PJ.elPalco.setPointerCapture(ev.pointerId); } catch (err) { /* segue sem captura */ }
+  ev.preventDefault();
+};
+
+PJ.desenhoSeguir = function (ev) {
+  if (!traco || ev.pointerId !== traco.pid) return;
+  ev.preventDefault();
+  var amostras = ev.getCoalescedEvents ? ev.getCoalescedEvents() : [ev];
+  if (!amostras.length) amostras = [ev];
+
+  if (traco.tipo === 'seta') {
+    var f = amostras[amostras.length - 1];
+    var pf = PJ.pontoParaCampo(f.clientX, f.clientY);
+    traco.pontos[1] = [pf.x, pf.y];
+  } else {
+    for (var i = 0; i < amostras.length; i++) {
+      var p = PJ.pontoParaCampo(amostras[i].clientX, amostras[i].clientY);
+      var ultimo = traco.pontos[traco.pontos.length - 1];
+      if (Math.abs(ultimo[0] - p.x) + Math.abs(ultimo[1] - p.y) > 0.4) traco.pontos.push([p.x, p.y]);
+    }
+  }
+  if (!quadroSeta) quadroSeta = window.requestAnimationFrame(function () {
+    quadroSeta = 0;
+    PJ.desenharSetas();
+  });
+};
+
+PJ.desenhoTerminar = function (ev) {
+  if (!traco || ev.pointerId !== traco.pid) return;
+  var t = traco;
+  traco = null;
+  try { PJ.elPalco.releasePointerCapture(ev.pointerId); } catch (err) { /* já soltou */ }
+
+  var a = t.pontos[0];
+  var b = t.pontos[t.pontos.length - 1];
+  var tamanho = Math.sqrt(Math.pow(b[0] - a[0], 2) + Math.pow(b[1] - a[1], 2));
+  if (tamanho < 3 && t.pontos.length < 8) { PJ.desenharSetas(); return; } // toque sem querer
+
+  if (t.tipo === 'risco') t.pontos = simplificar(t.pontos, 0.35);
+  t.pontos = t.pontos.map(function (p) {
+    return [Math.round(p[0] * 10) / 10, Math.round(p[1] * 10) / 10];
+  });
+  PJ.antes('desenhar');
+  PJ.campo().setas.push({ tipo: t.tipo, cor: t.cor, pontos: t.pontos });
+  PJ.atualizar();
+};
+
+PJ.desenhoCancelar = function () {
+  traco = null;
+  PJ.desenharSetas();
+};
+
+// Tira os pontos que não mudam o formato do risco (Ramer-Douglas-Peucker).
+// Sem isso, um rabisco de 3 segundos guarda centenas de pontos e um dia
+// o celular reclama que a memória acabou.
+function simplificar(pontos, tolerancia) {
+  if (pontos.length < 3) return pontos;
+  var primeiro = 0;
+  var ultimo = pontos.length - 1;
+  var manter = {};
+  manter[primeiro] = true;
+  manter[ultimo] = true;
+
+  var pilha = [[primeiro, ultimo]];
+  while (pilha.length) {
+    var par = pilha.pop();
+    var ini = par[0], fim = par[1];
+    var maior = 0, indice = -1;
+    for (var i = ini + 1; i < fim; i++) {
+      var d = distanciaDaReta(pontos[i], pontos[ini], pontos[fim]);
+      if (d > maior) { maior = d; indice = i; }
+    }
+    if (maior > tolerancia && indice > 0) {
+      manter[indice] = true;
+      pilha.push([ini, indice], [indice, fim]);
+    }
+  }
+  return pontos.filter(function (p, i) { return manter[i]; });
+}
+
+function distanciaDaReta(p, a, b) {
+  var dx = b[0] - a[0];
+  var dy = b[1] - a[1];
+  var tam2 = dx * dx + dy * dy;
+  if (!tam2) return Math.sqrt(Math.pow(p[0] - a[0], 2) + Math.pow(p[1] - a[1], 2));
+  var t = PJ.limitar(((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / tam2, 0, 1);
+  var px = a[0] + t * dx;
+  var py = a[1] + t * dy;
+  return Math.sqrt(Math.pow(p[0] - px, 2) + Math.pow(p[1] - py, 2));
+}
+
+// ---------------------------------------------------------- desenhar na tela
+
+function caminhoDe(m, pontos) {
+  return pontos.map(function (p, i) {
+    var q = PJ.paraDesenho(m, p[0], p[1]);
+    return (i === 0 ? 'M' : 'L') + (Math.round(q[0] * 100) / 100) + ' ' + (Math.round(q[1] * 100) / 100);
+  }).join(' ');
+}
+
+function pontaDaSeta(m, pontos) {
+  var n = pontos.length;
+  var fim = PJ.paraDesenho(m, pontos[n - 1][0], pontos[n - 1][1]);
+  var antes = PJ.paraDesenho(m, pontos[n - 2][0], pontos[n - 2][1]);
+  var dx = fim[0] - antes[0];
+  var dy = fim[1] - antes[1];
+  var tam = Math.sqrt(dx * dx + dy * dy);
+  if (tam < 0.001) return '';
+  dx /= tam; dy /= tam;
+  var C = 4.5, A = 2.6;          // comprimento e meia largura da ponta
+  var px = -dy, py = dx;
+  return [
+    fim[0] + ',' + fim[1],
+    (fim[0] - dx * C + px * A) + ',' + (fim[1] - dy * C + py * A),
+    (fim[0] - dx * C - px * A) + ',' + (fim[1] - dy * C - py * A),
+  ].join(' ');
+}
+
+PJ.desenharSetas = function () {
+  var m = PJ.modalidade();
+  var lista = PJ.campo().setas.slice();
+  if (traco) lista.push(traco);
+  elSetas.setAttribute('viewBox', '0 0 100 ' + (Math.round(m.alturaVB * 1000) / 1000));
+  elSetas.setAttribute('preserveAspectRatio', 'none');
+
+  elSetas.innerHTML = lista.map(function (t) {
+    var cor = PJ.CORES_SETA[t.cor] || PJ.CORES_SETA.amarelo;
+    var partes = ['<path d="' + caminhoDe(m, t.pontos) + '" fill="none" stroke="' + cor +
+      '" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>'];
+    if (t.tipo === 'seta' && t.pontos.length > 1) {
+      var ponta = pontaDaSeta(m, t.pontos);
+      if (ponta) partes.push('<polygon points="' + ponta + '" fill="' + cor + '"/>');
+    }
+    return partes.join('');
+  }).join('');
+};
+
+PJ.apagarUltimaSeta = function () {
+  var c = PJ.campo();
+  if (!c.setas.length) return false;
+  PJ.antes('apagar seta');
+  c.setas.pop();
+  PJ.atualizar();
+  return true;
+};
+
+PJ.limparSetas = function () {
+  var c = PJ.campo();
+  if (!c.setas.length) return false;
+  PJ.antes('apagar setas');
+  c.setas = [];
+  PJ.atualizar();
+  return true;
+};
+
+// ------------------------------------------- redesenhar as setas na foto
+
+PJ.desenharSetasCanvas = function (ctx, ox, oy, larg, alt, setas) {
+  var u = larg / 100;
+  setas.forEach(function (t) {
+    var cor = PJ.CORES_SETA[t.cor] || PJ.CORES_SETA.amarelo;
+    var pts = t.pontos.map(function (p) {
+      return [ox + (p[0] / 100) * larg, oy + ((100 - p[1]) / 100) * alt];
+    });
+    if (pts.length < 2) return;
+    ctx.save();
+    ctx.strokeStyle = cor;
+    ctx.fillStyle = cor;
+    ctx.lineWidth = 1.6 * u;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.beginPath();
+    pts.forEach(function (p, i) { if (i === 0) ctx.moveTo(p[0], p[1]); else ctx.lineTo(p[0], p[1]); });
+    ctx.stroke();
+    if (t.tipo === 'seta') {
+      var fim = pts[pts.length - 1];
+      var antes = pts[pts.length - 2];
+      var dx = fim[0] - antes[0];
+      var dy = fim[1] - antes[1];
+      var tam = Math.sqrt(dx * dx + dy * dy);
+      if (tam > 0.5) {
+        dx /= tam; dy /= tam;
+        var C = 4.5 * u, A = 2.6 * u, px = -dy, py = dx;
+        ctx.beginPath();
+        ctx.moveTo(fim[0], fim[1]);
+        ctx.lineTo(fim[0] - dx * C + px * A, fim[1] - dy * C + py * A);
+        ctx.lineTo(fim[0] - dx * C - px * A, fim[1] - dy * C - py * A);
+        ctx.closePath();
+        ctx.fill();
+      }
+    }
+    ctx.restore();
+  });
+};
+
+/* ===== 50-paineis.js ===== */
+// As gavetas do aplicativo: banco, táticas, desenhar, meu time, mandar a
+// escalação, anotações do jogo e ajustes.
+
+// ------------------------------------------------------ ajudantes de tela
+
+function cria(tag, classe, texto) {
+  var el = document.createElement(tag);
+  if (classe) el.className = classe;
+  if (texto != null) el.textContent = texto;
+  return el;
+}
+
+function bt(texto, classe, aoTocar, quantos) {
+  var b = cria('button', 'bt ' + (classe || ''));
+  b.type = 'button';
+  b.appendChild(document.createTextNode(texto));
+  if (quantos) b.appendChild(cria('span', 'quantos', quantos));
+  if (aoTocar) b.addEventListener('click', aoTocar);
+  return b;
+}
+
+function secao(titulo) {
+  var d = cria('div', 'secao');
+  if (titulo) d.appendChild(cria('p', 'rotulo', titulo));
+  return d;
+}
+
+function texto(t, classe) {
+  return cria('p', classe || 'explica', t);
+}
+
+PJ.cria = cria;
+PJ.bt = bt;
+
+// -------------------------------------------------------------- recados
+
+PJ.aviso = function (msg, rotulo, acao) {
+  var caixa = document.getElementById('tarjas');
+  var t = cria('div', 'tarja boa');
+  t.appendChild(cria('p', null, msg));
+  if (rotulo && acao) {
+    t.appendChild(bt(rotulo, 'pequena', function () { t.remove(); acao(); }));
+  }
+  t.appendChild(bt('Ok', 'pequena', function () { t.remove(); }));
+  caixa.appendChild(t);
+  window.setTimeout(function () { if (t.isConnected) t.remove(); }, 12000);
+};
+
+PJ.anunciar = function (msg) {
+  var a = document.getElementById('anuncio');
+  if (a) a.textContent = msg;
+};
+
+PJ.avisarSalvo = function (deuCerto) {
+  var r = document.getElementById('rodapeSalvo');
+  if (!r) return;
+  if (deuCerto) {
+    r.textContent = 'Tudo salvo neste aparelho';
+    r.removeAttribute('data-falhou');
+  } else {
+    r.textContent = 'Não consegui salvar aqui. Guarde uma cópia em Configurar.';
+    r.setAttribute('data-falhou', '1');
+  }
+};
+
+// Pergunta com duas saídas, sempre com o verbo da ação escrito no botão.
+PJ.perguntar = function (msg, rotuloSim, aoConfirmar, perigoso) {
+  var caixa = document.getElementById('tarjas');
+  var t = cria('div', 'tarja atencao');
+  t.appendChild(cria('p', null, msg));
+  t.appendChild(bt(rotuloSim, 'pequena ' + (perigoso ? 'perigo' : 'principal'), function () {
+    t.remove();
+    aoConfirmar();
+  }));
+  t.appendChild(bt('Cancelar', 'pequena', function () { t.remove(); }));
+  caixa.appendChild(t);
+};
+
+// Caixinha para digitar um texto, sem usar a janelinha do navegador.
+PJ.pedirTexto = function (rotulo, valor, aoConfirmar) {
+  var caixa = document.getElementById('tarjas');
+  var t = cria('div', 'tarja');
+  t.style.flexWrap = 'wrap';
+  t.appendChild(cria('p', null, rotulo));
+  var campo = document.createElement('input');
+  campo.type = 'text';
+  campo.value = valor || '';
+  campo.style.flex = '1 1 100%';
+  t.appendChild(campo);
+  var confirmar = function () {
+    var v = campo.value.trim();
+    t.remove();
+    if (v) aoConfirmar(v);
+  };
+  campo.addEventListener('keydown', function (ev) {
+    if (ev.key === 'Enter') { ev.preventDefault(); confirmar(); }
+  });
+  t.appendChild(bt('Salvar', 'pequena principal', confirmar));
+  t.appendChild(bt('Cancelar', 'pequena', function () { t.remove(); }));
+  caixa.appendChild(t);
+  campo.focus();
+  campo.select();
+};
+
+// ------------------------------------------------------ abrir e fechar
+
+PJ.painelAberto = null;
+PJ.pilhaPaineis = [];
+
+PJ.telaGrande = function () {
+  return window.matchMedia('(min-width: 900px)').matches;
+};
+
+// `deDentro` = abriu a partir de outro painel, então ganha o botão Voltar
+PJ.abrirPainel = function (id, deDentro) {
+  var painel = PJ.PAINEIS[id];
+  if (!painel) return;
+  if (deDentro && PJ.painelAberto) PJ.pilhaPaineis.push(PJ.painelAberto);
+  else PJ.pilhaPaineis = [];
+  PJ.painelAberto = id;
+  var folha = document.getElementById('folha');
+  folha.hidden = false;
+  PJ.recarregarPainel();
+  window.requestAnimationFrame(function () { folha.classList.add('aberta'); });
+  document.getElementById('cortina').hidden = PJ.telaGrande();
+  PJ.marcarBarra();
+};
+
+PJ.voltarPainel = function () {
+  var anterior = PJ.pilhaPaineis.pop();
+  if (!anterior) { PJ.fecharPainel(); return; }
+  PJ.painelAberto = anterior;
+  PJ.recarregarPainel();
+  PJ.marcarBarra();
+};
+
+PJ.fecharPainel = function () {
+  PJ.pilhaPaineis = [];
+  if (PJ.telaGrande()) { PJ.abrirPainel('banco'); return; }
+  var folha = document.getElementById('folha');
+  folha.classList.remove('aberta');
+  folha.removeAttribute('data-alto');
+  document.getElementById('cortina').hidden = true;
+  PJ.painelAberto = null;
+  window.setTimeout(function () { if (!PJ.painelAberto) folha.hidden = true; }, 240);
+  PJ.marcarBarra();
+};
+
+PJ.recarregarPainel = function () {
+  if (!PJ.painelAberto) return;
+  var painel = PJ.PAINEIS[PJ.painelAberto];
+  if (!painel) return;
+  var folha = document.getElementById('folha');
+  if (painel.alto && !PJ.telaGrande()) folha.setAttribute('data-alto', '1');
+  else folha.removeAttribute('data-alto');
+  document.getElementById('folhaTitulo').textContent = painel.titulo();
+  var sair = document.getElementById('btFecharFolha');
+  sair.textContent = PJ.pilhaPaineis.length ? 'Voltar' : 'Fechar';
+  var corpo = document.getElementById('folhaCorpo');
+  corpo.textContent = '';
+  corpo.scrollTop = 0;
+  painel.montar(corpo);
+};
+
+PJ.marcarBarra = function () {
+  var pares = {
+    btBanco: 'banco', btTaticas: 'taticas', btDesenhar: 'desenhar',
+    btConfigurar: 'configurar',
+  };
+  Object.keys(pares).forEach(function (idBotao) {
+    var b = document.getElementById(idBotao);
+    if (b) b.setAttribute('aria-pressed', PJ.painelAberto === pares[idBotao] ? 'true' : 'false');
+  });
+};
+
+// linha do menu de configuração: título grande e uma frase explicando
+function itemMenu(titulo, descricao, aoTocar, classe) {
+  var b = cria('button', 'itemMenu ' + (classe || ''));
+  b.type = 'button';
+  b.appendChild(cria('strong', null, titulo));
+  if (descricao) b.appendChild(cria('span', null, descricao));
+  b.addEventListener('click', aoTocar);
+  return b;
+}
+PJ.itemMenu = itemMenu;
+
+// ------------------------------------------- barra do jogador escolhido
+// Um toque na peça não abre gaveta nenhuma: só marca o jogador e mostra
+// uma barrinha com o que dá para fazer com ele. Assim o campo não some
+// atrás de um painel por causa de um toque sem querer.
+
+PJ.escolherJogador = function (id) {
+  PJ.selecionado = PJ.selecionado === id ? null : id;
+  PJ.render();
+};
+
+PJ.mostrarBarraJogador = function () {
+  var barra = document.getElementById('barraJogador');
+  if (!barra) return;
+  var j = PJ.selecionado ? PJ.jogadorPorId(PJ.selecionado) : null;
+  if (!j) { barra.hidden = true; barra.textContent = ''; return; }
+
+  barra.textContent = '';
+  var pos = PJ.POSICOES[j.posicao] || { nome: j.posicao };
+  var quem = cria('span', 'quemEscolhido');
+  quem.appendChild(cria('strong', null, j.nome));
+  quem.appendChild(cria('span', null, 'camisa ' + j.numero + ' · ' + pos.nome));
+  barra.appendChild(quem);
+
+  barra.appendChild(bt('Trocar jogador', 'pequena principal', function () {
+    PJ.abrirPainel('banco');
+  }));
+  barra.appendChild(bt('Tirar do campo', 'pequena', function () {
+    PJ.antes('tirar do campo');
+    PJ.tirarDoCampo(j.id);
+    PJ.atualizar();
+    PJ.aviso(PJ.primeiroNome(j.nome) + ' foi para o banco.', 'Desfazer', PJ.desfazerAcao);
+  }));
+  barra.appendChild(bt('Ficha do jogador', 'pequena', function () {
+    PJ.abrirJogador(j.id);
+  }));
+  barra.appendChild(bt('Soltar', 'pequena', function () {
+    PJ.selecionado = null;
+    PJ.render();
+  }));
+  barra.hidden = false;
+};
+
+// Quando o jogador é solto num setor diferente do dele, o aplicativo
+// PERGUNTA. Nunca muda a posição sozinho — senão a escalação que vai para
+// o grupo sai errada, com o goleiro listado no ataque.
+PJ.ofereceTrocarPosicao = function (id, x, y) {
+  var j = PJ.jogadorPorId(id);
+  if (!j) return;
+  var sugerida = PJ.siglaPorLugar(PJ.estado.modalidade, x, y);
+  var atual = PJ.POSICOES[j.posicao];
+  var nova = PJ.POSICOES[sugerida];
+  if (!atual || !nova || atual.setor === nova.setor) return;
+  PJ.perguntar(
+    PJ.primeiroNome(j.nome) + ' está jogando ' + nomeDoSetor(nova.setor) +
+      ' agora. Mudar a posição dele para ' + sugerida + '?',
+    'Mudar para ' + sugerida,
+    function () {
+      PJ.antes('trocar posição');
+      j.posicao = sugerida;
+      PJ.marcarComoMeu(j);
+      PJ.atualizar();
+    }
+  );
+};
+
+function nomeDoSetor(setor) {
+  return {
+    goleiro: 'no gol', defesa: 'na defesa', meio: 'no meio', ataque: 'na frente',
+  }[setor] || 'em outro lugar';
+}
+
+// ------------------------------------------------------------- BANCO
+
+function fazerTroca(idEntra) {
+  var sai = PJ.selecionado;
+  if (!sai) return;
+  var qSai = PJ.jogadorPorId(sai);
+  var qEntra = PJ.jogadorPorId(idEntra);
+  PJ.antes('trocar jogador');
+  PJ.trocarJogador(sai, idEntra);
+  PJ.selecionado = null;
+  PJ.registrarNoJogo(PJ.primeiroNome(qSai.nome) + ' saiu, ' + PJ.primeiroNome(qEntra.nome) + ' entrou');
+  PJ.atualizar();
+  PJ.aviso(PJ.primeiroNome(qSai.nome) + ' saiu. ' + PJ.primeiroNome(qEntra.nome) + ' entrou.',
+    'Desfazer', PJ.desfazerAcao);
+}
+
+function pecaReserva(j, aoTocar, rotulo) {
+  var b = cria('button', 'reserva');
+  b.type = 'button';
+  b.appendChild(cria('span', 'bolinha', String(j.numero)));
+  b.appendChild(cria('span', 'nomeCurto', PJ.primeiroNome(j.nome)));
+  b.setAttribute('aria-label', rotulo + ' ' + j.nome);
+  b.addEventListener('click', aoTocar);
+  return b;
+}
+
+PJ.PAINEIS = {};
+
+PJ.PAINEIS.banco = {
+  titulo: function () { return 'Banco — quem está fora'; },
+  montar: function (corpo) {
+    var m = PJ.modalidade();
+    var c = PJ.campo();
+    var reservas = PJ.banco();
+    var faltam = m.emCampo - c.emCampo.length;
+
+    if (PJ.selecionado) {
+      var q = PJ.jogadorPorId(PJ.selecionado);
+      corpo.appendChild(cria('p', 'rotulo', 'Quem entra no lugar de ' + PJ.primeiroNome(q.nome) + '?'));
+    } else {
+      corpo.appendChild(texto('Toque no jogador do campo e depois no que vai entrar.'));
+    }
+
+    if (reservas.length) {
+      var fila = cria('div', 'fileiraBanco');
+      reservas.forEach(function (j) {
+        fila.appendChild(pecaReserva(j, function () {
+          if (PJ.selecionado) { fazerTroca(j.id); return; }
+          if (faltam > 0) {
+            PJ.antes('colocar em campo');
+            PJ.colocarEmCampo(j.id);
+            PJ.atualizar();
+            PJ.aviso(PJ.primeiroNome(j.nome) + ' entrou em campo.', 'Desfazer', PJ.desfazerAcao);
+            return;
+          }
+          PJ.aviso('O campo já está completo. Toque primeiro no jogador que vai sair.');
+        }, PJ.selecionado ? 'Colocar no lugar de' : (faltam > 0 ? 'Colocar em campo:' : 'Reserva')));
+      });
+      corpo.appendChild(fila);
+    } else {
+      corpo.appendChild(texto('Todo mundo do seu time está em campo.'));
+    }
+
+    if (PJ.selecionado) {
+      corpo.appendChild(bt('Cancelar troca', 'larga', function () {
+        PJ.selecionado = null;
+        PJ.atualizar();
+      }));
+    }
+
+    corpo.appendChild(cria('p', 'rotulo',
+      'Em campo: ' + c.emCampo.length + ' — No banco: ' + reservas.length));
+
+    if (faltam > 0) {
+      var falta = cria('div', 'tarja atencao');
+      falta.appendChild(cria('p', null, 'Faltam ' + faltam + ' ' +
+        (faltam === 1 ? 'jogador' : 'jogadores') + ' para o ' + m.nome + '.'));
+      falta.appendChild(bt('Meu time', 'pequena', function () { PJ.abrirPainel('meutime'); }));
+      corpo.appendChild(falta);
+    }
+  },
+};
+
+// ------------------------------------------------------------ TÁTICAS
+
+PJ.PAINEIS.taticas = {
+  titulo: function () { return 'Táticas e formações'; },
+  montar: function (corpo) {
+    var m = PJ.modalidade();
+    var c = PJ.campo();
+    var minhas = PJ.estado.taticas.filter(function (t) { return t.modalidade === m.id; });
+
+    var formacoes = secao('Arrumar o time agora — ' + m.nome);
+    formacoes.appendChild(texto('Arruma os jogadores sozinho. Ninguém entra e ninguém sai do campo.'));
+    var grade = cria('div', 'grade');
+    m.formacoes.forEach(function (f) {
+      var b = bt(f.nome, c.formacao === f.id ? 'principal' : '', function () {
+        var antes = ondeEstavam();
+        PJ.antes('formação');
+        PJ.aplicarFormacao(f.id);
+        PJ.atualizar();
+        PJ.aviso(f.explicacao + quemMudou(antes), 'Desfazer', PJ.desfazerAcao);
+      });
+      b.title = f.explicacao;
+      grade.appendChild(b);
+    });
+    formacoes.appendChild(grade);
+
+    var salvas = secao('Minhas táticas salvas');
+    if (!minhas.length) {
+      salvas.appendChild(texto('Arrume o time do seu jeito e toque em "Salvar esta tática" para guardar o desenho e usar de novo no meio do jogo.'));
+    } else {
+      minhas.slice().reverse().forEach(function (t) { salvas.appendChild(cartaoDeTatica(t)); });
+    }
+    salvas.appendChild(bt('Salvar esta tática', 'principal larga', abrirSalvarTatica));
+
+    // enquanto não houver tática salva, o que ele precisa ver primeiro,
+    // no minuto 60 perdendo de 1 a 0, é a formação pronta
+    if (minhas.length) { corpo.appendChild(salvas); corpo.appendChild(formacoes); }
+    else { corpo.appendChild(formacoes); corpo.appendChild(salvas); }
+
+    var sEst = secao('Estilo de jogo');
+    sEst.appendChild(texto('Muda o time inteiro de lugar de uma vez, conforme o jogo pedir.'));
+    PJ.ESTILOS.forEach(function (e) {
+      var b = cria('button', 'escolhaEstilo');
+      b.type = 'button';
+      b.appendChild(document.createTextNode(e.nome));
+      b.appendChild(cria('span', null, e.explicacao + ' ' + e.quandoUsar));
+      b.setAttribute('aria-pressed', c.estilo === e.id ? 'true' : 'false');
+      b.addEventListener('click', function () {
+        PJ.antes('estilo de jogo');
+        PJ.aplicarEstilo(e.id);
+        PJ.registrarNoJogo('Estilo: ' + e.nome);
+        PJ.atualizar();
+        PJ.aviso('Estilo "' + e.nome + '" aplicado.', 'Desfazer', PJ.desfazerAcao);
+      });
+      sEst.appendChild(b);
+    });
+    corpo.appendChild(sEst);
+  },
+};
+
+function ondeEstavam() {
+  var mapa = {};
+  PJ.campo().emCampo.forEach(function (p) {
+    var j = PJ.jogadorPorId(p.id);
+    if (j) mapa[p.id] = { nome: j.nome, y: p.y };
+  });
+  return mapa;
+}
+
+function quemMudou(antes) {
+  var mudou = [];
+  PJ.campo().emCampo.forEach(function (p) {
+    var a = antes[p.id];
+    if (!a) return;
+    if (Math.abs(a.y - p.y) > 14) {
+      mudou.push(PJ.primeiroNome(a.nome) + (p.y > a.y ? ' subiu' : ' recuou'));
+    }
+  });
+  if (!mudou.length) return ' Os jogadores só se ajeitaram, ninguém mudou de setor.';
+  return ' ' + mudou.slice(0, 3).join(', ') + '.';
+}
+
+function cartaoDeTatica(t) {
+  var linha = cria('div', 'secao');
+  var cartao = cria('button', 'cartaoTatica');
+  cartao.type = 'button';
+  var mini = cria('span', 'miniatura');
+  t.vagas.forEach(function (v) {
+    var ponto = cria('i');
+    ponto.style.left = v.x + '%';
+    ponto.style.top = (100 - v.y) + '%';
+    mini.appendChild(ponto);
+  });
+  cartao.appendChild(mini);
+  var info = cria('span', 'info');
+  info.appendChild(cria('strong', null, t.nome));
+  info.appendChild(cria('span', null, t.vagas.length + ' lugares · salva em ' + t.criadaEm));
+  cartao.appendChild(info);
+  cartao.addEventListener('click', function () {
+    PJ.antes('trocar de tática');
+    var c = PJ.campo();
+    PJ.encaixarNasVagas(t.vagas);
+    c.estilo = t.estilo || 'padrao';
+    PJ.registrarNoJogo('Tática: ' + t.nome);
+    PJ.atualizar();
+    var extra = t.vagas.length > c.emCampo.length
+      ? ' A tática tem ' + t.vagas.length + ' lugares e você tem ' + c.emCampo.length + ' em campo.'
+      : '';
+    PJ.aviso('Desenho da tática "' + t.nome + '" aplicado. Os mesmos jogadores continuam em campo.' + extra,
+      'Desfazer', PJ.desfazerAcao);
+  });
+  linha.appendChild(cartao);
+
+  var acoes = cria('div', 'linhaBotoes');
+  acoes.appendChild(bt('Trocar nome', 'pequena', function () {
+    PJ.pedirTexto('Novo nome da tática', t.nome, function (v) {
+      PJ.antes('nome da tática');
+      t.nome = v;
+      PJ.atualizar();
+    });
+  }));
+  acoes.appendChild(bt('Apagar tática', 'pequena perigo', function () {
+    PJ.perguntar('Apagar a tática "' + t.nome + '"?', 'Apagar tática', function () {
+      PJ.antes('apagar tática');
+      PJ.estado.taticas = PJ.estado.taticas.filter(function (x) { return x !== t; });
+      PJ.atualizar();
+      PJ.aviso('Tática apagada.', 'Desfazer', PJ.desfazerAcao);
+    }, true);
+  }));
+  linha.appendChild(acoes);
+  return linha;
+}
+
+function abrirSalvarTatica() {
+  var m = PJ.modalidade();
+  var c = PJ.campo();
+  var corpo = document.getElementById('folhaCorpo');
+  var caixa = cria('div', 'secao');
+  caixa.appendChild(cria('p', 'rotulo', 'Nome da tática'));
+  var campo = document.createElement('input');
+  campo.type = 'text';
+  campo.placeholder = 'Ex: Segurar o resultado';
+  caixa.appendChild(campo);
+
+  var sugestoes = cria('div', 'linhaBotoes');
+  [PJ.formacaoPorId(c.formacao).nome, 'Começo de jogo', 'Segurar o resultado',
+    'Partir pro ataque', 'Com um a menos'].forEach(function (s) {
+    sugestoes.appendChild(bt(s, 'pequena', function () { campo.value = s; campo.focus(); }));
+  });
+  caixa.appendChild(sugestoes);
+  caixa.appendChild(texto('A tática guarda só o desenho: os lugares em campo. Não guarda quem estava em cada lugar, então aplicar de novo no meio do jogo não desfaz as suas trocas.'));
+
+  var acoes = cria('div', 'linhaBotoes');
+  acoes.appendChild(bt('Salvar', 'principal', function () {
+    var nome = campo.value.trim() || ('Tática ' + (PJ.estado.taticas.length + 1));
+    PJ.antes('salvar tática');
+    PJ.estado.taticas.push({
+      nome: nome,
+      modalidade: m.id,
+      criadaEm: PJ.hoje(),
+      estilo: c.estilo,
+      vagas: c.emCampo.map(function (p) {
+        var j = PJ.jogadorPorId(p.id);
+        return { sigla: j ? j.posicao : 'MEI', x: p.x, y: p.y };
+      }),
+    });
+    PJ.atualizar();
+    PJ.aviso('Tática "' + nome + '" salva.');
+  }));
+  acoes.appendChild(bt('Cancelar', '', function () { PJ.recarregarPainel(); }));
+  caixa.appendChild(acoes);
+
+  corpo.textContent = '';
+  corpo.appendChild(caixa);
+  campo.focus();
+}
+
+// ----------------------------------------------------------- DESENHAR
+
+PJ.PAINEIS.desenhar = {
+  titulo: function () { return 'Desenhar no campo'; },
+  montar: function (corpo) {
+    corpo.appendChild(texto('Arraste o dedo no campo para fazer a seta. Enquanto você desenha, os jogadores ficam travados.'));
+
+    var ferramentas = cria('div', 'linhaBotoes');
+    [['seta', 'Seta'], ['risco', 'Risco livre']].forEach(function (par) {
+      ferramentas.appendChild(bt(par[1], PJ.ferramenta === par[0] ? 'principal' : '', function () {
+        PJ.ferramenta = par[0];
+        PJ.recarregarPainel();
+      }));
+    });
+    corpo.appendChild(ferramentas);
+
+    var cores = cria('div', 'linhaBotoes');
+    [['amarelo', 'Amarelo'], ['branco', 'Branco'], ['vermelho', 'Vermelho']].forEach(function (par) {
+      var b = bt(par[1], PJ.corSeta === par[0] ? 'principal' : '', function () {
+        PJ.corSeta = par[0];
+        PJ.recarregarPainel();
+      });
+      b.style.borderColor = PJ.CORES_SETA[par[0]];
+      b.style.borderWidth = '4px';
+      cores.appendChild(b);
+    });
+    corpo.appendChild(cores);
+
+    var quantas = PJ.campo().setas.length;
+    corpo.appendChild(cria('p', 'rotulo', quantas + (quantas === 1 ? ' seta no campo' : ' setas no campo')));
+
+    corpo.appendChild(bt('Apagar a última', 'larga', function () {
+      if (!PJ.apagarUltimaSeta()) PJ.aviso('Não há nenhuma seta para apagar.');
+    }));
+
+    var limpar = bt('Apagar todas as setas', 'larga perigo', function () {
+      var n = PJ.campo().setas.length;
+      if (!n) { PJ.aviso('Não há nenhuma seta para apagar.'); return; }
+      PJ.perguntar('Apagar as ' + n + ' setas? Os jogadores não mudam de lugar.',
+        'Apagar setas', function () { PJ.limparSetas(); }, true);
+    });
+    limpar.style.marginTop = '12px';
+    corpo.appendChild(limpar);
+
+    corpo.appendChild(bt('Parar de desenhar', 'principal larga', function () {
+      PJ.trocarModoDesenho(false);
+      PJ.fecharPainel();
+      PJ.aviso('Pronto. Agora você já pode arrastar os jogadores de novo.');
+    }));
+  },
+};
+
+PJ.trocarModoDesenho = function (ligar) {
+  PJ.modoDesenho = ligar;
+  document.getElementById('palco').dataset.modo = ligar ? 'desenhar' : 'mover';
+  if (ligar) {
+    PJ.selecionado = null;
+    PJ.mostrarBarraJogador();
+    PJ.abrirPainel('desenhar');
+  }
+  PJ.desenharPecas();
+  PJ.marcarBarra();
+  var b = document.getElementById('btDesenhar');
+  if (b) b.setAttribute('aria-pressed', ligar ? 'true' : 'false');
+};
+
+// ----------------------------------------------------------- CONFIGURAR
+// Um menu só, no alto da tela, com tudo que não se mexe durante o lance.
+
+PJ.PAINEIS.modalidade = {
+  titulo: function () { return 'Tipo de campo'; },
+  montar: function (corpo) {
+    corpo.appendChild(texto('Cada tipo de campo guarda a própria escalação. Trocar não apaga jogador nenhum.'));
+    PJ.ORDEM_MODALIDADES.forEach(function (id) {
+      var m = PJ.MODALIDADES[id];
+      var escolhido = PJ.estado.modalidade === id;
+      corpo.appendChild(itemMenu(
+        (escolhido ? '✓ ' : '') + m.nome,
+        m.nomeLongo + ' — ' + m.emCampo + ' em campo, campo de ' +
+          m.comprimentoM + ' por ' + m.larguraM + ' metros',
+        function () {
+          PJ.trocarModalidade(id);
+          PJ.fecharPainel();
+        },
+        escolhido ? 'principal' : ''
+      ));
+    });
+  },
+};
+
+// ------------------------------- banco e comissão ao lado do campo
+
+PJ.desenharListaLado = function () {
+  var caixa = document.getElementById('listaLado');
+  if (!caixa) return;
+  caixa.textContent = '';
+
+  var reservas = PJ.banco();
+  var gBanco = cria('div', 'grupoLado banco');
+  gBanco.appendChild(cria('h3', null, 'No banco (' + reservas.length + ')'));
+  if (!reservas.length) {
+    gBanco.appendChild(cria('p', 'vazio', 'Todo mundo está em campo.'));
+  }
+  reservas.forEach(function (j) {
+    var b = cria('button', 'linhaLado');
+    b.type = 'button';
+    b.appendChild(cria('span', 'bolinha', String(j.numero)));
+    var quem = cria('span', 'quem');
+    quem.appendChild(cria('strong', null, j.nome));
+    quem.appendChild(cria('span', null, ((PJ.POSICOES[j.posicao] || {}).nome || j.posicao) +
+      (PJ.ehCapitao(j.id) ? ' · capitão' : '')));
+    b.appendChild(quem);
+    b.setAttribute('aria-label', 'Reserva ' + j.nome + '. Abrir o jogador.');
+    b.addEventListener('click', function () { PJ.abrirJogador(j.id); });
+    gBanco.appendChild(b);
+  });
+  caixa.appendChild(gBanco);
+
+  var gComissao = cria('div', 'grupoLado comissao');
+  gComissao.appendChild(cria('h3', null, 'Comissão técnica'));
+  PJ.estado.comissao.forEach(function (c, i) {
+    var b = cria('button', 'linhaLado' + (c.nome ? '' : ' aPreencher'));
+    b.type = 'button';
+    b.appendChild(cria('span', 'cargo', PJ.cargoCurto(c.cargo)));
+    var quem = cria('span', 'quem');
+    quem.appendChild(cria('strong', null, c.nome || 'A preencher'));
+    quem.appendChild(cria('span', null, c.cargo));
+    b.appendChild(quem);
+    b.setAttribute('aria-label', c.cargo + ': ' + (c.nome || 'a preencher') + '. Toque para escrever o nome.');
+    b.addEventListener('click', function () { PJ.pedirNomeDaComissao(i); });
+    gComissao.appendChild(b);
+  });
+  caixa.appendChild(gComissao);
+};
+
+PJ.cargoCurto = function (cargo) {
+  var mapa = {
+    'Técnico': 'TEC', 'Auxiliar técnico': 'AUX', 'Massagista': 'MAS',
+    'Preparador físico': 'PF', 'Treinador de goleiros': 'TG',
+    'Roupeiro': 'ROU', 'Diretor': 'DIR',
+  };
+  return mapa[cargo] || cargo.slice(0, 3).toUpperCase();
+};
+
+PJ.pedirNomeDaComissao = function (i) {
+  var c = PJ.estado.comissao[i];
+  if (!c) return;
+  PJ.pedirTexto('Nome do ' + c.cargo.toLowerCase(), c.nome, function (v) {
+    PJ.antes('comissão técnica');
+    c.nome = v;
+    PJ.atualizar();
+  });
+};
+
+// ------------------------------------------------- COMISSÃO TÉCNICA
+
+PJ.PAINEIS.comissao = {
+  alto: true,
+  titulo: function () { return 'Comissão técnica'; },
+  montar: function (corpo) {
+    corpo.appendChild(texto('Quem está do lado de fora do campo. Deixe em branco o que não tiver.'));
+
+    PJ.estado.comissao.forEach(function (c, i) {
+      var bloco = secao(c.cargo);
+      var linha = cria('div', 'linhaBotoes');
+      var campo = document.createElement('input');
+      campo.type = 'text';
+      campo.value = c.nome;
+      campo.placeholder = 'Nome do ' + c.cargo.toLowerCase();
+      campo.setAttribute('aria-label', 'Nome do ' + c.cargo.toLowerCase());
+      campo.style.flex = '3 1 180px';
+      var salvar = function () {
+        var v = campo.value.trim();
+        if (v === c.nome) return;
+        PJ.antes('comissão técnica');
+        c.nome = v;
+        PJ.salvar();
+        PJ.desenharListaLado();
+      };
+      campo.addEventListener('change', salvar);
+      campo.addEventListener('keydown', function (ev) {
+        if (ev.key === 'Enter') { ev.preventDefault(); campo.blur(); }
+      });
+      linha.appendChild(campo);
+      bloco.appendChild(linha);
+
+      if (PJ.CARGOS_PADRAO.indexOf(c.cargo) < 0) {
+        bloco.appendChild(bt('Tirar ' + c.cargo.toLowerCase() + ' da lista', 'pequena perigo', function () {
+          PJ.antes('comissão técnica');
+          PJ.estado.comissao.splice(i, 1);
+          PJ.atualizar();
+          PJ.recarregarPainel();
+        }));
+      }
+      corpo.appendChild(bloco);
+    });
+
+    var jaTem = {};
+    PJ.estado.comissao.forEach(function (c) { jaTem[c.cargo] = true; });
+    var faltam = PJ.CARGOS_EXTRAS.filter(function (cargo) { return !jaTem[cargo]; });
+    if (faltam.length) {
+      var s = secao('Acrescentar cargo');
+      var grade = cria('div', 'linhaBotoes');
+      faltam.forEach(function (cargo) {
+        grade.appendChild(bt(cargo, 'pequena', function () {
+          PJ.antes('comissão técnica');
+          PJ.estado.comissao.push({ cargo: cargo, nome: '' });
+          PJ.atualizar();
+          PJ.recarregarPainel();
+        }));
+      });
+      s.appendChild(grade);
+      s.appendChild(bt('Outro cargo', 'larga', function () {
+        PJ.pedirTexto('Nome do cargo', '', function (v) {
+          PJ.antes('comissão técnica');
+          PJ.estado.comissao.push({ cargo: v, nome: '' });
+          PJ.atualizar();
+          PJ.recarregarPainel();
+        });
+      }));
+      corpo.appendChild(s);
+    }
+
+    corpo.appendChild(bt('Pronto', 'principal larga', function () {
+      if (PJ.pilhaPaineis.length) PJ.voltarPainel(); else PJ.fecharPainel();
+    }));
+  },
+};
+
+PJ.quando = function (iso) {
+  if (!iso) return 'sem data';
+  var d = new Date(iso);
+  if (isNaN(d.getTime())) return 'sem data';
+  var dd = function (n) { return (n < 10 ? '0' : '') + n; };
+  return dd(d.getDate()) + '/' + dd(d.getMonth() + 1) + '/' + d.getFullYear() +
+    ' às ' + dd(d.getHours()) + ':' + dd(d.getMinutes());
+};
+
+PJ.PAINEIS.recuperar = {
+  alto: true,
+  titulo: function () { return 'Procurar time guardado'; },
+  montar: function (corpo) {
+    corpo.appendChild(texto('O aplicativo guarda o seu time neste aparelho e mantém uma segunda via. Aqui aparece tudo que ele encontrou guardado.'));
+
+    var achados = PJ.procurarTimes();
+    if (!achados.length) {
+      corpo.appendChild(texto('Não achei nada guardado neste navegador. Se você montou o time em outro celular, em outro navegador, ou numa janela anônima, o time está lá — não vem junto sozinho.'));
+    }
+
+    achados.forEach(function (a) {
+      var grupo = cria('div', 'secao');
+      var detalhe = a.quantos + ' jogadores' +
+        (a.proprios !== a.quantos ? ' (' + a.proprios + ' seus, ' + (a.quantos - a.proprios) + ' de exemplo)' : '') +
+        ' · guardado em ' + PJ.quando(a.quando);
+      grupo.appendChild(itemMenu(
+        (a.emUso ? '✓ ' : '') + a.nome + (a.emUso ? ' — em uso agora' : ''),
+        detalhe,
+        function () {
+          if (a.emUso) { PJ.aviso('Esse já é o time que está aberto.'); return; }
+          PJ.perguntar('Trazer de volta o time "' + a.nome + '" com ' + a.quantos +
+            ' jogadores? O time de agora sai da tela, mas continua guardado.',
+            'Trazer este time', function () {
+              PJ.antes('recuperar time');
+              PJ.estado = PJ.sanear(PJ.completar(JSON.parse(JSON.stringify(a.dados))));
+              PJ.aplicarTema();
+              PJ.atualizar();
+              PJ.aviso('Time "' + PJ.estado.nomeTime + '" recuperado.', 'Desfazer', PJ.desfazerAcao);
+            });
+        },
+        a.emUso ? 'principal' : ''
+      ));
+      corpo.appendChild(grupo);
+    });
+
+    var ajuda = secao('Se o seu time não estiver aqui');
+    ajuda.appendChild(texto('1. Se a aba antiga ainda estiver aberta em algum lugar, toque em Desfazer lá em cima: ele guarda as 30 últimas ações.'));
+    ajuda.appendChild(texto('2. Se você salvou uma cópia em arquivo, use "Abrir cópia salva" em Configurar.'));
+    ajuda.appendChild(texto('3. Guarde uma cópia sempre que terminar de cadastrar o time. É o único jeito de levar para outro aparelho.'));
+    corpo.appendChild(ajuda);
+  },
+};
+
+PJ.PAINEIS.configurar = {
+  alto: true,
+  titulo: function () { return 'Configurar'; },
+  montar: function (corpo) {
+    var ir = function (id) { return function () { PJ.abrirPainel(id, true); }; };
+
+    var time = secao('O seu time');
+    var gTime = cria('div', 'grupoMenu');
+    gTime.appendChild(itemMenu('Configurar meu time',
+      'Nomes, números e posições. ' + PJ.estado.elenco.length + ' jogadores.', ir('meutime'), 'principal'));
+    var comissao = PJ.estado.comissao.filter(function (c) { return c.nome; });
+    gTime.appendChild(itemMenu('Comissão técnica',
+      comissao.length
+        ? comissao.map(function (c) { return c.cargo + ': ' + PJ.primeiroNome(c.nome); }).join(' · ')
+        : 'Técnico, auxiliar técnico, massagista — a preencher.',
+      ir('comissao')));
+    gTime.appendChild(itemMenu('Nome do time', PJ.estado.nomeTime, function () {
+      PJ.pedirTexto('Nome do time', PJ.estado.nomeTime, function (v) {
+        PJ.antes('nome do time');
+        PJ.estado.nomeTime = v;
+        PJ.atualizar();
+      });
+    }));
+    time.appendChild(gTime);
+    corpo.appendChild(time);
+
+    var jogo = secao('Jogo');
+    var gJogo = cria('div', 'grupoMenu');
+    gJogo.appendChild(itemMenu('Configurar táticas',
+      'Formações prontas, estilos de jogo e as suas táticas salvas.', ir('taticas')));
+    gJogo.appendChild(itemMenu('Mandar a escalação',
+      'Copiar a lista pronta para o grupo do WhatsApp.', ir('mandar')));
+    gJogo.appendChild(itemMenu('Foto do campo',
+      'Imagem do campo com os nomes, para mandar no grupo.', ir('foto')));
+    gJogo.appendChild(itemMenu('Anotações do jogo',
+      'Placar e o que aconteceu durante a partida.', ir('jogo')));
+    jogo.appendChild(gJogo);
+    corpo.appendChild(jogo);
+
+    var campo = secao('Campo e tela');
+    var gCampo = cria('div', 'grupoMenu');
+    var outros = PJ.ORDEM_MODALIDADES
+      .filter(function (id) { return id !== PJ.estado.modalidade; })
+      .map(function (id) { return PJ.MODALIDADES[id].nome; });
+    gCampo.appendChild(itemMenu('Tipo de campo',
+      'Agora: ' + PJ.modalidade().nome + '. Toque para trocar para ' + outros.join(' ou ') + '.',
+      ir('modalidade')));
+    gCampo.appendChild(itemMenu('Mostrar adversário',
+      PJ.estado.adversario ? 'LIGADO — bolinhas azuis para desenhar a marcação.'
+        : 'DESLIGADO — toque para pôr o adversário no campo.', function () {
+        PJ.antes('mostrar adversário');
+        PJ.estado.adversario = !PJ.estado.adversario;
+        if (PJ.estado.adversario) PJ.montarAdversarios();
+        PJ.atualizar();
+      }));
+    gCampo.appendChild(itemMenu('Tela', PJ.nomeDaTela() +
+      ' — normal, para o sol ou para a noite.', ir('tela')));
+    campo.appendChild(gCampo);
+    corpo.appendChild(campo);
+
+    var guardar = secao('Guardar e recomeçar');
+    var gGuardar = cria('div', 'grupoMenu');
+    gGuardar.appendChild(texto('Tudo fica neste aparelho. Não precisa de internet e não precisa criar conta. Guarde uma cópia para o caso de trocar de celular.'));
+    gGuardar.appendChild(itemMenu('Salvar cópia do meu time',
+      'Baixa um arquivo com o elenco e as táticas.', function () {
+        PJ.entregarArquivo('meu-time-plano-de-jogo.json', JSON.stringify(PJ.estado),
+          'Não deu para salvar a cópia por aqui. Abra o aplicativo no computador para guardar o arquivo.');
+      }));
+
+    var entrada = document.createElement('input');
+    entrada.type = 'file';
+    entrada.accept = '.json,.txt,application/json,text/plain';
+    entrada.style.display = 'none';
+    entrada.addEventListener('change', function () {
+      var arquivo = entrada.files && entrada.files[0];
+      if (!arquivo) return;
+      var leitor = new FileReader();
+      leitor.onload = function () {
+        try {
+          var lido = JSON.parse(String(leitor.result));
+          if (!lido || !lido.elenco || !lido.campos) throw new Error('formato');
+          PJ.perguntar('Isso troca o time de agora pelo time da cópia.', 'Abrir cópia', function () {
+            PJ.antes('abrir cópia');
+            PJ.estado = PJ.sanear(PJ.completar(lido));
+            PJ.aplicarTema();
+            PJ.atualizar();
+            PJ.aviso('Cópia aberta.', 'Desfazer', PJ.desfazerAcao);
+          });
+        } catch (err) {
+          PJ.aviso('Esse arquivo não é uma cópia do Plano de Jogo.');
+        }
+      };
+      leitor.readAsText(arquivo);
+      entrada.value = '';
+    });
+    gGuardar.appendChild(entrada);
+    gGuardar.appendChild(itemMenu('Abrir cópia salva',
+      'Traz de volta o time de um arquivo guardado.', function () { entrada.click(); }));
+    gGuardar.appendChild(itemMenu('Procurar time guardado',
+      'Mostra tudo que está guardado neste aparelho e traz de volta.', ir('recuperar')));
+    gGuardar.appendChild(itemMenu('Ver as dicas de novo',
+      'Mostra outra vez as três dicas do começo.', function () {
+        PJ.estado.dicas = 0;
+        PJ.salvar();
+        PJ.fecharPainel();
+        PJ.mostrarDica();
+      }));
+    guardar.appendChild(gGuardar);
+    corpo.appendChild(guardar);
+
+    var fim = cria('div', 'grupoMenu');
+    fim.style.marginTop = '20px';
+    fim.appendChild(itemMenu('Apagar tudo e começar do zero',
+      'Apaga os jogadores e as táticas deste aparelho.', function () {
+        PJ.perguntar('Isso apaga seus jogadores e suas táticas.', 'Apagar tudo', function () {
+          PJ.perguntar('Última confirmação. Apagar mesmo?', 'Sim, apagar tudo', function () {
+            PJ.antes('apagar tudo');
+            PJ.estado = PJ.estadoNovo();
+            PJ.aplicarTema();
+            PJ.atualizar();
+            PJ.aviso('Tudo apagado. O time de exemplo voltou.', 'Desfazer', PJ.desfazerAcao);
+          }, true);
+        }, true);
+      }, 'perigo'));
+    corpo.appendChild(fim);
+
+    corpo.appendChild(cria('p', 'rotulo', 'Plano de Jogo — funciona sem internet'));
+  },
+};
+
+// ---------------------------------------------------------- MEU TIME
+
+PJ.vagasPuladas = {};
+
+// Qual lugar do campo ainda está vazio — para o aplicativo dizer, enquanto
+// ele digita, qual posição está sendo preenchida. Sem isso o artilheiro
+// que ele digita primeiro acaba escalado no gol.
+PJ.proximaVaga = function () {
+  var c = PJ.campo();
+  var m = PJ.modalidade();
+  if (c.emCampo.length >= m.emCampo) return null;
+  var vagas = PJ.vagasDaFormacao(PJ.formacaoPorId(c.formacao));
+  for (var i = 0; i < vagas.length; i++) {
+    var v = vagas[i];
+    if (PJ.vagasPuladas[v.sigla + v.x + v.y]) continue;
+    var ocupada = c.emCampo.some(function (p) {
+      return Math.abs(p.x - v.x) < 7 && Math.abs(p.y - v.y) < 7;
+    });
+    if (!ocupada) return v;
+  }
+  return null;
+};
+
+PJ.PAINEIS.meutime = {
+  alto: true,
+  titulo: function () { return 'Meu time'; },
+  montar: function (corpo) {
+    var vaga = PJ.proximaVaga();
+    var faltam = PJ.modalidade().emCampo - PJ.campo().emCampo.length;
+
+    var caixa = cria('div', 'secao');
+    caixa.appendChild(cria('p', 'rotulo', vaga
+      ? 'Agora o ' + PJ.POSICOES[vaga.sigla].nome.toUpperCase() +
+        (faltam > 1 ? ' — faltam ' + faltam : '')
+      : 'Adicionar jogador para o banco'));
+    var linha = cria('div', 'linhaBotoes');
+    var nome = document.createElement('input');
+    nome.type = 'text';
+    nome.placeholder = 'Nome do jogador';
+    nome.id = 'novoNome';
+    nome.style.flex = '3 1 180px';
+    var numero = document.createElement('input');
+    numero.type = 'number';
+    numero.inputMode = 'numeric';
+    numero.min = '0';
+    numero.max = '99';
+    numero.placeholder = 'Número';
+    numero.id = 'novoNumero';
+    numero.value = String(vaga ? PJ.numeroParaPosicao(vaga.sigla) : PJ.proximoNumero());
+    numero.style.flex = '1 1 90px';
+    linha.appendChild(nome);
+    linha.appendChild(numero);
+    caixa.appendChild(linha);
+
+    var adicionar = function () {
+      var v = nome.value.trim();
+      if (!v) { nome.focus(); return; }
+      var repetido = PJ.estado.elenco.some(function (j) {
+        return j.nome.toLowerCase() === v.toLowerCase();
+      });
+      var gravar = function (nomeFinal) {
+        PJ.antes('adicionar jogador');
+        var n = parseInt(numero.value, 10);
+        var novo = {
+          id: PJ.uid(),
+          nome: nomeFinal,
+          numero: Number.isFinite(n) ? PJ.limitar(n, 0, 99)
+            : (vaga ? PJ.numeroParaPosicao(vaga.sigla) : PJ.proximoNumero()),
+          posicao: vaga ? vaga.sigla : 'MEI',
+        };
+        PJ.estado.elenco.push(novo);
+        if (vaga) PJ.colocarEmCampo(novo.id);
+        PJ.atualizar();
+        var campoNome = document.getElementById('novoNome');
+        if (campoNome) campoNome.focus();
+        if (vaga) {
+          PJ.anunciar(nomeFinal + ' entrou ' + nomeDoSetor(PJ.POSICOES[vaga.sigla].setor));
+        }
+      };
+      if (repetido) {
+        PJ.perguntar('Já existe um ' + v + ' no time. Adicionar assim mesmo?', 'Adicionar', function () {
+          gravar(v + ' 2');
+        });
+        return;
+      }
+      gravar(v);
+    };
+    nome.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Enter') { ev.preventDefault(); adicionar(); }
+    });
+
+    var acoes = cria('div', 'linhaBotoes');
+    acoes.appendChild(bt('Adicionar', 'principal', adicionar));
+    if (vaga) {
+      acoes.appendChild(bt('Pular esta posição', '', function () {
+        PJ.vagasPuladas[vaga.sigla + vaga.x + vaga.y] = true;
+        PJ.recarregarPainel();
+      }));
+    }
+    caixa.appendChild(acoes);
+    caixa.appendChild(texto('Dica: dá para falar o nome no microfone do teclado do celular. Depois é só arrastar quem estiver fora do lugar.'));
+    corpo.appendChild(caixa);
+
+    corpo.appendChild(bt('Colar lista de nomes do WhatsApp', 'larga', colarLista));
+    corpo.appendChild(bt('Comissão técnica', 'larga', function () { PJ.abrirPainel('comissao', true); }));
+
+    var deExemplo = PJ.quantosDeExemplo();
+    if (deExemplo) {
+      var tarja = cria('div', 'tarja atencao');
+      tarja.appendChild(cria('p', null, 'Ainda há ' + deExemplo +
+        (deExemplo === 1 ? ' nome de exemplo na lista.' : ' nomes de exemplo na lista.') +
+        ' Troque o nome de cada um pelo do seu jogador, ou apague todos de uma vez. Quem você já mudou fica no time.'));
+      tarja.appendChild(bt('Apagar os ' + deExemplo + ' de exemplo', 'pequena perigo', function () {
+        PJ.perguntar('Apagar os ' + deExemplo + ' nomes de exemplo? Os jogadores que você já mudou continuam no time.',
+          'Apagar os de exemplo', function () {
+            var n = PJ.apagarNomesDeExemplo();
+            PJ.aviso(n + ' nomes de exemplo saíram da lista.', 'Desfazer', PJ.desfazerAcao);
+          }, true);
+      }));
+      corpo.appendChild(tarja);
+    }
+
+    var lista = cria('div', 'lista');
+    PJ.estado.elenco.forEach(function (j) { lista.appendChild(itemDoElenco(j)); });
+    corpo.appendChild(lista);
+    corpo.appendChild(cria('p', 'rotulo', 'Seu time tem ' + PJ.estado.elenco.length + ' jogadores.'));
+    corpo.appendChild(bt('Pronto', 'principal larga', function () { PJ.fecharPainel(); }));
+  },
+};
+
+function itemDoElenco(j) {
+  var item = cria('div', 'itemLista');
+  item.appendChild(cria('span', 'numero', String(j.numero)));
+  var quem = cria('span', 'quem');
+  quem.appendChild(cria('strong', null, j.nome));
+  var dentro = PJ.estaEmCampo(j.id);
+  var marcas = cria('span');
+  marcas.appendChild(cria('span', 'etiqueta', j.posicao));
+  marcas.appendChild(document.createTextNode(' '));
+  marcas.appendChild(cria('span', 'etiqueta' + (dentro ? ' dentro' : ''), dentro ? 'Em campo' : 'No banco'));
+  if (PJ.ehCapitao(j.id)) {
+    marcas.appendChild(document.createTextNode(' '));
+    marcas.appendChild(cria('span', 'etiqueta capitao', 'Capitão'));
+  }
+  quem.appendChild(marcas);
+  item.appendChild(quem);
+
+  var acoes = cria('div', 'acoes');
+  var editar = bt('Ficha do jogador', 'pequena principal', function () {
+    PJ.abrirJogador(j.id);
+  });
+  editar.setAttribute('aria-label', 'Abrir a ficha de ' + j.nome + ': nome, camisa, posição e capitão');
+  acoes.appendChild(editar);
+  var apagar = bt('Apagar', 'pequena perigo', function () {
+    PJ.perguntar('Apagar ' + j.nome + ' do time? Ele sai da lista e do campo.',
+      'Apagar jogador', function () { PJ.apagarJogador(j.id); }, true);
+  });
+  apagar.setAttribute('aria-label', 'Apagar ' + j.nome + ' do time');
+  acoes.appendChild(apagar);
+  item.appendChild(acoes);
+  return item;
+}
+
+// ------------------------------------------------- tela de um jogador
+// Nome, número da camisa e posição, tudo num lugar só.
+
+PJ.jogadorEmEdicao = null;
+
+PJ.abrirJogador = function (id) {
+  PJ.jogadorEmEdicao = id;
+  PJ.abrirPainel('jogador', true);
+};
+
+// Dois jogadores não podem ter a mesma camisa: o aplicativo oferece a
+// troca, que é o que o treinador quer fazer nove entre dez vezes.
+PJ.definirNumero = function (j, novoNumero) {
+  if (!Number.isFinite(novoNumero)) return;
+  novoNumero = PJ.limitar(novoNumero, 0, 99);
+  if (novoNumero === j.numero) return;
+  var dono = null;
+  PJ.estado.elenco.forEach(function (outro) {
+    if (outro !== j && outro.numero === novoNumero) dono = outro;
+  });
+  if (!dono) {
+    PJ.antes('número da camisa');
+    j.numero = novoNumero;
+    PJ.marcarComoMeu(j);
+    PJ.atualizar();
+    return;
+  }
+  PJ.perguntar('A camisa ' + novoNumero + ' já é do ' + PJ.primeiroNome(dono.nome) +
+    '. Trocar os números entre os dois?', 'Trocar os dois', function () {
+    PJ.antes('número da camisa');
+    dono.numero = j.numero;
+    j.numero = novoNumero;
+    PJ.marcarComoMeu(j);
+    PJ.marcarComoMeu(dono);
+    PJ.atualizar();
+    PJ.aviso(PJ.primeiroNome(j.nome) + ' ficou com a ' + j.numero + ' e ' +
+      PJ.primeiroNome(dono.nome) + ' com a ' + dono.numero + '.', 'Desfazer', PJ.desfazerAcao);
+  });
+};
+
+PJ.verTodasPosicoes = false;
+
+PJ.PAINEIS.jogador = {
+  alto: true,
+  titulo: function () {
+    var j = PJ.jogadorPorId(PJ.jogadorEmEdicao);
+    return j ? j.nome : 'Jogador';
+  },
+  montar: function (corpo) {
+    var j = PJ.jogadorPorId(PJ.jogadorEmEdicao);
+    if (!j) {
+      corpo.appendChild(texto('Esse jogador não está mais no time.'));
+      corpo.appendChild(bt('Voltar', 'principal larga', PJ.voltarPainel));
+      return;
+    }
+
+    var sNome = secao('Nome');
+    var campoNome = document.createElement('input');
+    campoNome.type = 'text';
+    campoNome.value = j.nome;
+    campoNome.setAttribute('aria-label', 'Nome do jogador');
+    var salvarNome = function () {
+      var v = campoNome.value.trim();
+      if (!v || v === j.nome) { campoNome.value = j.nome; return; }
+      PJ.antes('trocar nome');
+      j.nome = v;
+      PJ.marcarComoMeu(j);
+      PJ.atualizar();
+    };
+    campoNome.addEventListener('change', salvarNome);
+    campoNome.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Enter') { ev.preventDefault(); campoNome.blur(); }
+    });
+    sNome.appendChild(campoNome);
+    corpo.appendChild(sNome);
+
+    var sNumero = secao('Número da camisa');
+    var campoNumero = document.createElement('input');
+    campoNumero.type = 'number';
+    campoNumero.inputMode = 'numeric';
+    campoNumero.min = '0';
+    campoNumero.max = '99';
+    campoNumero.value = String(j.numero);
+    campoNumero.setAttribute('aria-label', 'Número da camisa de ' + j.nome);
+    campoNumero.style.fontSize = '26px';
+    campoNumero.style.fontWeight = '900';
+    campoNumero.style.textAlign = 'center';
+    var salvarNumero = function () {
+      var n = parseInt(campoNumero.value, 10);
+      if (!Number.isFinite(n)) { campoNumero.value = String(j.numero); return; }
+      PJ.definirNumero(j, n);
+    };
+    campoNumero.addEventListener('change', salvarNumero);
+    campoNumero.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Enter') { ev.preventDefault(); campoNumero.blur(); }
+    });
+    sNumero.appendChild(campoNumero);
+
+    var daPosicao = PJ.POSICOES[j.posicao] && PJ.POSICOES[j.posicao].camisa;
+    if (daPosicao && daPosicao !== j.numero) {
+      sNumero.appendChild(bt('Usar a camisa ' + daPosicao + ', do ' +
+        PJ.POSICOES[j.posicao].nome.toLowerCase(), 'larga', function () {
+        PJ.definirNumero(j, daPosicao);
+      }));
+    }
+    sNumero.appendChild(texto('Se a camisa já for de outro jogador, o aplicativo pergunta se você quer trocar os números entre os dois.'));
+    corpo.appendChild(sNumero);
+
+    var m = PJ.modalidade();
+    var doCampo = {};
+    m.formacoes.forEach(function (f) {
+      f.jogadores.forEach(function (slot) { doCampo[slot[0]] = true; });
+    });
+    var lista = Object.keys(PJ.POSICOES).filter(function (sigla) {
+      return PJ.verTodasPosicoes || doCampo[sigla] || j.posicao === sigla;
+    });
+
+    var sPos = secao('Posição');
+    sPos.appendChild(texto(PJ.verTodasPosicoes
+      ? 'Todas as posições dos três tipos de campo.'
+      : 'Posições do ' + m.nome + '.'));
+    var grade = cria('div', 'grade');
+    lista.forEach(function (sigla) {
+      var pos = PJ.POSICOES[sigla];
+      var escolhida = j.posicao === sigla;
+      var b = itemMenu((escolhida ? '✓ ' : '') + sigla, pos.nome, function () {
+        if (escolhida) return;
+        PJ.antes('trocar posição');
+        j.posicao = sigla;
+        PJ.marcarComoMeu(j);
+        PJ.atualizar();
+      }, 'compacto' + (escolhida ? ' principal' : ''));
+      b.setAttribute('aria-pressed', escolhida ? 'true' : 'false');
+      grade.appendChild(b);
+    });
+    sPos.appendChild(grade);
+    sPos.appendChild(bt(PJ.verTodasPosicoes ? 'Mostrar só as do ' + m.nome : 'Ver todas as posições',
+      'larga', function () {
+        PJ.verTodasPosicoes = !PJ.verTodasPosicoes;
+        PJ.recarregarPainel();
+      }));
+    corpo.appendChild(sPos);
+
+    var sCapitao = secao('Capitão');
+    var ehCapitao = PJ.ehCapitao(j.id);
+    var outro = PJ.estado.capitao && !ehCapitao ? PJ.jogadorPorId(PJ.estado.capitao) : null;
+    sCapitao.appendChild(texto(ehCapitao
+      ? PJ.primeiroNome(j.nome) + ' é o capitão do time. A faixa aparece na peça dele, na escalação e na foto.'
+      : (outro ? 'Hoje quem usa a faixa é ' + outro.nome + '.' : 'Ninguém está com a faixa ainda.')));
+    sCapitao.appendChild(bt(ehCapitao
+      ? 'Tirar a faixa de ' + PJ.primeiroNome(j.nome)
+      : 'Pôr a faixa em ' + PJ.primeiroNome(j.nome),
+      ehCapitao ? 'larga' : 'principal larga', function () {
+        PJ.definirCapitao(j.id);
+        PJ.atualizar();
+        PJ.aviso(PJ.ehCapitao(j.id)
+          ? PJ.primeiroNome(j.nome) + ' é o novo capitão.'
+          : 'O time ficou sem capitão.', 'Desfazer', PJ.desfazerAcao);
+      }));
+    corpo.appendChild(sCapitao);
+
+    var sOnde = secao('No time');
+    var dentro = PJ.estaEmCampo(j.id);
+    sOnde.appendChild(texto(PJ.primeiroNome(j.nome) +
+      (dentro ? ' está em campo no ' : ' está no banco do ') + m.nome + '.'));
+    sOnde.appendChild(bt(dentro ? 'Tirar do campo' : 'Colocar em campo', 'larga', function () {
+      if (dentro) {
+        PJ.antes('tirar do campo');
+        PJ.tirarDoCampo(j.id);
+      } else {
+        if (PJ.campo().emCampo.length >= m.emCampo) {
+          PJ.aviso('O campo já está completo. Tire alguém antes de colocar ' +
+            PJ.primeiroNome(j.nome) + '.');
+          return;
+        }
+        PJ.antes('colocar em campo');
+        PJ.colocarEmCampo(j.id);
+      }
+      PJ.atualizar();
+    }));
+    corpo.appendChild(sOnde);
+
+    corpo.appendChild(bt('Pronto', 'principal larga', function () {
+      salvarNome();
+      salvarNumero();
+      PJ.voltarPainel();
+    }));
+
+    var apagar = bt('Apagar ' + PJ.primeiroNome(j.nome) + ' do time', 'larga perigo', function () {
+      PJ.perguntar('Apagar ' + j.nome + ' do time? Ele sai da lista e do campo.',
+        'Apagar jogador', function () {
+          PJ.apagarJogador(j.id);
+          PJ.voltarPainel();
+        }, true);
+    });
+    apagar.style.marginTop = '20px';
+    corpo.appendChild(apagar);
+  },
+};
+
+PJ.apagarJogador = function (id) {
+  var j = PJ.jogadorPorId(id);
+  if (!j) return;
+  PJ.antes('apagar jogador');
+  PJ.estado.elenco = PJ.estado.elenco.filter(function (x) { return x.id !== id; });
+  if (PJ.estado.capitao === id) PJ.estado.capitao = null;
+  PJ.ORDEM_MODALIDADES.forEach(function (mid) {
+    var c = PJ.estado.campos[mid];
+    c.emCampo = c.emCampo.filter(function (p) { return p.id !== id; });
+    if (c.base) c.base = c.base.filter(function (p) { return p.id !== id; });
+  });
+  if (PJ.selecionado === id) PJ.selecionado = null;
+  PJ.atualizar();
+  PJ.aviso(j.nome + ' foi apagado.', 'Desfazer', PJ.desfazerAcao);
+};
+
+// Tira da lista SÓ os nomes de exemplo em que ninguém encostou. Quem o
+// treinador renomeou, renumerou ou mudou de posição fica. E isso nunca
+// acontece sozinho: só quando ele toca no botão.
+PJ.apagarNomesDeExemplo = function () {
+  var sobra = PJ.estado.elenco.filter(function (j) { return !j.exemplo; });
+  var quantos = PJ.estado.elenco.length - sobra.length;
+  if (!quantos) return 0;
+  var fica = {};
+  sobra.forEach(function (j) { fica[j.id] = true; });
+  PJ.antes('apagar nomes de exemplo');
+  PJ.estado.elenco = sobra;
+  PJ.estado.exemplo = false;
+  PJ.ORDEM_MODALIDADES.forEach(function (id) {
+    var c = PJ.estado.campos[id];
+    c.emCampo = c.emCampo.filter(function (p) { return fica[p.id]; });
+    c.base = null;
+  });
+  PJ.completarEscalacao();
+  PJ.atualizar();
+  return quantos;
+};
+
+function colarLista() {
+  var corpo = document.getElementById('folhaCorpo');
+  var caixa = cria('div', 'secao');
+  caixa.appendChild(cria('p', 'rotulo', 'Cole aqui a lista de nomes, um por linha'));
+  var area = document.createElement('textarea');
+  area.className = 'caixaTexto';
+  area.placeholder = '1 - Zé\n2 - Nando\n3 - Tião';
+  caixa.appendChild(area);
+  caixa.appendChild(texto('A ordem da lista vira a ordem do campo: o primeiro nome vai para o gol. Depois é só arrastar quem estiver fora do lugar.'));
+  var acoes = cria('div', 'linhaBotoes');
+  acoes.appendChild(bt('Adicionar todos', 'principal', function () {
+    var linhas = area.value.split('\n').map(function (l) {
+      return l.replace(/^[\s\-•*.\d)]+/, '').replace(/\(.*?\)/g, '').trim();
+    }).filter(function (l) { return l.length > 0 && l.length < 40; });
+    if (!linhas.length) { PJ.aviso('Não achei nenhum nome nessa lista.'); return; }
+    PJ.antes('colar lista');
+    linhas.forEach(function (nome) {
+      PJ.estado.elenco.push({ id: PJ.uid(), nome: nome, numero: PJ.proximoNumero(), posicao: '' });
+    });
+    PJ.completarEscalacao();
+    PJ.atualizar();
+    PJ.aviso(linhas.length + ' jogadores adicionados.', 'Desfazer', PJ.desfazerAcao);
+  }));
+  acoes.appendChild(bt('Cancelar', '', function () { PJ.recarregarPainel(); }));
+  caixa.appendChild(acoes);
+  corpo.textContent = '';
+  corpo.appendChild(caixa);
+  area.focus();
+}
+
+// Coloca em campo quem estiver sobrando, até completar a modalidade.
+PJ.completarEscalacao = function () {
+  var m = PJ.modalidade();
+  var c = PJ.campo();
+  var vagas = PJ.vagasDaFormacao(PJ.formacaoPorId(c.formacao));
+  var fora = PJ.banco();
+  var k = 0;
+  while (c.emCampo.length < m.emCampo && k < fora.length) {
+    var v = vagas[c.emCampo.length];
+    if (!v) break;
+    c.emCampo.push({ id: fora[k].id, x: v.x, y: v.y });
+    var j = PJ.jogadorPorId(fora[k].id);
+    if (j && !PJ.POSICOES[j.posicao]) j.posicao = v.sigla;
+    k++;
+  }
+  c.base = null;
+};
+
+/* ===== 55-compartilhar.js ===== */
+// Mandar a escalação, gerar a foto do campo, anotações do jogo e ajustes.
+
+PJ.hoje = function () {
+  var d = new Date();
+  var doisDigitos = function (n) { return (n < 10 ? '0' : '') + n; };
+  return doisDigitos(d.getDate()) + '/' + doisDigitos(d.getMonth() + 1) + '/' + d.getFullYear();
+};
+
+PJ.relogioDoJogo = function () {
+  var d = new Date();
+  return ((d.getHours() < 10 ? '0' : '') + d.getHours()) + ':' +
+    ((d.getMinutes() < 10 ? '0' : '') + d.getMinutes());
+};
+
+// ------------------------------------------------- texto da escalação
+
+PJ.textoDaEscalacao = function (recado) {
+  var m = PJ.modalidade();
+  var c = PJ.campo();
+  var grupos = { goleiro: [], defesa: [], meio: [], ataque: [] };
+  c.emCampo.slice().sort(function (a, b) { return a.y - b.y || a.x - b.x; }).forEach(function (p) {
+    var j = PJ.jogadorPorId(p.id);
+    if (!j) return;
+    var pos = PJ.POSICOES[j.posicao] || { setor: 'meio' };
+    grupos[pos.setor].push(j.numero + ' ' + j.nome + (PJ.ehCapitao(j.id) ? ' (C)' : ''));
+  });
+
+  var linhas = [];
+  linhas.push('ESCALAÇÃO — ' + PJ.estado.nomeTime.toUpperCase());
+  linhas.push(m.nome + ' — ' + PJ.hoje());
+  var est = PJ.estiloPorId(c.estilo);
+  var nomeFormacao = '';
+  m.formacoes.forEach(function (f) { if (f.id === c.formacao) nomeFormacao = f.nome; });
+  if (nomeFormacao) linhas.push('Formação: ' + nomeFormacao + (est.id !== 'padrao' ? ' — ' + est.nome : ''));
+  linhas.push('');
+  if (grupos.goleiro.length) linhas.push('Goleiro: ' + grupos.goleiro.join(', '));
+  if (grupos.defesa.length) linhas.push('Defesa: ' + grupos.defesa.join(', '));
+  if (grupos.meio.length) linhas.push('Meio: ' + grupos.meio.join(', '));
+  if (grupos.ataque.length) linhas.push('Frente: ' + grupos.ataque.join(', '));
+  var banco = PJ.banco();
+  if (banco.length) {
+    linhas.push('');
+    linhas.push('Banco: ' + banco.map(function (j) { return j.numero + ' ' + j.nome; }).join(', '));
+  }
+  var comissao = PJ.estado.comissao.filter(function (c) { return c.nome; });
+  if (comissao.length) {
+    linhas.push('');
+    comissao.forEach(function (c) { linhas.push(c.cargo + ': ' + c.nome); });
+  }
+  if (recado) { linhas.push(''); linhas.push(recado); }
+  return linhas.join('\n');
+};
+
+PJ.PAINEIS.mandar = {
+  alto: true,
+  titulo: function () { return 'Mandar a escalação'; },
+  montar: function (corpo) {
+    corpo.appendChild(cria('p', 'rotulo', 'Escreva um recado (se quiser)'));
+    var recado = document.createElement('input');
+    recado.type = 'text';
+    recado.placeholder = 'Jogo domingo, 9h, campo do bairro';
+    recado.value = PJ.estado.recado || '';
+    corpo.appendChild(recado);
+
+    corpo.appendChild(cria('p', 'rotulo', 'Vai sair assim:'));
+    var previa = document.createElement('textarea');
+    previa.className = 'caixaTexto';
+    previa.readOnly = true;
+    previa.value = PJ.textoDaEscalacao(recado.value.trim());
+    corpo.appendChild(previa);
+
+    recado.addEventListener('input', function () {
+      PJ.estado.recado = recado.value;
+      previa.value = PJ.textoDaEscalacao(recado.value.trim());
+      PJ.salvar();
+    });
+
+    // o botão de copiar funciona sempre, inclusive sem internet e com o
+    // arquivo aberto do computador. O do WhatsApp, não — então ele só
+    // aparece quando tem como dar certo.
+    corpo.appendChild(bt('Copiar a lista', 'principal larga', function () {
+      PJ.copiar(previa.value, previa);
+    }));
+
+    if (location.protocol === 'https:' || location.protocol === 'http:') {
+      corpo.appendChild(bt('Abrir o WhatsApp com a lista', 'larga', function () {
+        var url = 'https://wa.me/?text=' + encodeURIComponent(previa.value);
+        var janela = window.open(url, '_blank', 'noopener');
+        if (!janela) PJ.aviso('Não consegui abrir o WhatsApp. Use o botão "Copiar a lista" e cole no grupo.');
+      }));
+    }
+
+    corpo.appendChild(bt('Foto do campo', 'larga', function () { PJ.abrirPainel('foto'); }));
+  },
+};
+
+// Entregar um arquivo ao treinador funciona de dois jeitos: na página
+// publicada quem salva é o próprio aplicativo do Claude; no arquivo aberto
+// do computador é o link de download comum do navegador.
+PJ.entregarArquivo = function (nomeArquivo, dados, recado) {
+  var pelaAncora = function () {
+    try {
+      var ehBlob = typeof Blob !== 'undefined' && dados instanceof Blob;
+      var url = ehBlob
+        ? URL.createObjectURL(dados)
+        : 'data:text/plain;charset=utf-8,' + encodeURIComponent(dados);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = nomeArquivo;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      if (ehBlob) window.setTimeout(function () { URL.revokeObjectURL(url); }, 5000);
+      PJ.aviso('Arquivo salvo no aparelho.');
+    } catch (err) {
+      PJ.aviso(recado);
+    }
+  };
+
+  if (window.claude && typeof window.claude.use === 'function') {
+    window.claude.use('downloads').then(function (downloads) {
+      if (!downloads) { PJ.aviso(recado); return; }
+      downloads.save({ filename: nomeArquivo, data: dados }).then(function () {
+        PJ.aviso('Arquivo salvo no aparelho.');
+      }, function (erro) {
+        if (erro && erro.code === 'declined') return;   // ele mesmo cancelou
+        PJ.aviso(recado);
+      });
+    }, function () { PJ.aviso(recado); });
+    return;
+  }
+  pelaAncora();
+};
+
+PJ.copiar = function (txt, campo) {
+  var deuCerto = function () { PJ.aviso('Lista copiada. Agora é só colar no WhatsApp.'); };
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(txt).then(deuCerto, function () { selecionar(campo); });
+      return;
+    }
+  } catch (err) { /* cai para a seleção na mão */ }
+  selecionar(campo);
+};
+
+function selecionar(campo) {
+  if (!campo) return;
+  campo.readOnly = false;
+  campo.focus();
+  campo.setSelectionRange(0, campo.value.length);
+  try {
+    document.execCommand('copy');
+    PJ.aviso('Lista copiada. Agora é só colar no WhatsApp.');
+  } catch (err) {
+    PJ.aviso('Segure o dedo no texto marcado e escolha Copiar.');
+  }
+  campo.readOnly = true;
+}
+
+// --------------------------------------------------------- foto do campo
+
+PJ.corDoTema = function (nome) {
+  return getComputedStyle(document.documentElement).getPropertyValue(nome).trim() || '#2e7d32';
+};
+
+// Corta o texto com reticências para caber na largura pedida.
+function cortarTexto(ctx, texto, largura) {
+  if (ctx.measureText(texto).width <= largura) return texto;
+  var corte = texto;
+  while (corte.length > 1 && ctx.measureText(corte + '…').width > largura) {
+    corte = corte.slice(0, -1);
+  }
+  return corte + '…';
+}
+
+PJ.gerarFoto = function () {
+  var m = PJ.modalidade();
+  var c = PJ.campo();
+
+  // A foto usa as MESMAS proporções da tela: disco, sigla e nome no mesmo
+  // tamanho relativo ao campo. Antes o jogador saía bem menor do que na
+  // prancheta e o nome ficava impossível de ler no WhatsApp.
+  var larg = 1200;
+  var margem = Math.round(larg * 0.04);
+  var campoLarg = larg - margem * 2;
+  var campoAlt = campoLarg / m.proporcao;
+  var topo = Math.round(larg * 0.15);
+  var rodape = Math.round(larg * 0.13);
+  var alt = Math.round(topo + campoAlt + rodape);
+
+  var cv = document.createElement('canvas');
+  cv.width = larg;
+  cv.height = alt;
+  var ctx = cv.getContext('2d');
+  var fonte = "system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif";
+
+  var cores = {
+    grama: PJ.corDoTema('--grama') || '#2e7d32',
+    gramaFaixa: PJ.corDoTema('--gramaFaixa') || '#276e2b',
+    cal: '#f5f7f0',
+    meio: PJ.corDoTema('--meio') || '#d4142a',
+  };
+  if (m.superficie === 'sintetico') { cores.grama = '#245f35'; cores.gramaFaixa = '#245f35'; }
+  if (m.superficie === 'quadra') { cores.grama = '#2f5358'; cores.gramaFaixa = '#2f5358'; }
+
+  // fundo sempre opaco: PNG transparente aparece preto no WhatsApp
+  ctx.fillStyle = '#11160f';
+  ctx.fillRect(0, 0, larg, alt);
+
+  ctx.textAlign = 'left';
+  ctx.fillStyle = '#f5f7f0';
+  ctx.font = '800 ' + Math.round(larg * 0.05) + 'px ' + fonte;
+  ctx.fillText(PJ.estado.nomeTime.slice(0, 24), margem, Math.round(larg * 0.062));
+
+  var nomeFormacao = '';
+  m.formacoes.forEach(function (f) { if (f.id === c.formacao) nomeFormacao = f.nome; });
+  var est = PJ.estiloPorId(c.estilo);
+  ctx.fillStyle = '#b3bdb0';
+  ctx.font = '700 ' + Math.round(larg * 0.029) + 'px ' + fonte;
+  ctx.fillText(m.nome + '  ·  ' + (nomeFormacao || 'Escalação') +
+    (est.id !== 'padrao' ? '  ·  ' + est.nome : '') + '  ·  ' + PJ.hoje(),
+    margem, Math.round(larg * 0.107));
+
+  PJ.desenharCampoCanvas(ctx, margem, topo, campoLarg, campoAlt, m, cores);
+  PJ.desenharSetasCanvas(ctx, margem, topo, campoLarg, campoAlt, c.setas);
+
+  // ------------------------------------------------------------ jogadores
+  var proporcaoDisco = m.id === 'futsal' ? 0.17 : (m.id === 'society' ? 0.145 : 0.125);
+  var disco = campoLarg * proporcaoDisco;
+  var raio = disco / 2;
+  var fonteNome = Math.round(disco * 0.26);
+  var alturaPlaca = Math.round(fonteNome * 1.7);
+  var medidas = PJ.medidasDaPlaca(c.emCampo, campoLarg, campoAlt, disco, alturaPlaca);
+  var corCasa = PJ.corDoTema('--casa') || '#f25c05';
+
+  c.emCampo.forEach(function (p) {
+    var j = PJ.jogadorPorId(p.id);
+    if (!j) return;
+    var px = margem + (p.x / 100) * campoLarg;
+    var py = topo + ((100 - p.y) / 100) * campoAlt;
+    var md = medidas[p.id] || {};
+
+    ctx.textAlign = 'center';
+    ctx.beginPath();
+    ctx.arc(px, py + raio * 0.12, raio, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(6,18,8,0.45)';
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(px, py, raio, 0, Math.PI * 2);
+    ctx.fillStyle = corCasa;
+    ctx.fill();
+    ctx.lineWidth = Math.max(2, raio * 0.13);
+    ctx.strokeStyle = '#11160f';
+    ctx.stroke();
+
+    ctx.fillStyle = 'rgba(245,247,240,0.95)';
+    ctx.font = '700 ' + Math.round(disco * 0.185) + 'px ' + fonte;
+    ctx.fillText(j.posicao, px, py - disco * 0.08);
+
+    ctx.fillStyle = '#f5f7f0';
+    ctx.font = '800 ' + Math.round(disco * 0.42) + 'px ' + fonte;
+    ctx.fillText(String(j.numero), px, py + disco * 0.25);
+
+    if (PJ.ehCapitao(j.id)) {
+      var rc = raio * 0.4;
+      var fx = px - raio * 0.72;
+      var fy = py + raio * 0.72;
+      ctx.beginPath();
+      ctx.arc(fx, fy, rc, 0, Math.PI * 2);
+      ctx.fillStyle = '#ffd400';
+      ctx.fill();
+      ctx.lineWidth = Math.max(2, rc * 0.22);
+      ctx.strokeStyle = '#11160f';
+      ctx.stroke();
+      ctx.fillStyle = '#11160f';
+      ctx.font = '800 ' + Math.round(rc * 1.25) + 'px ' + fonte;
+      ctx.fillText('C', fx, fy + rc * 0.45);
+    }
+
+    if (md.oculta || md.largura == null) return;
+    ctx.font = '700 ' + fonteNome + 'px ' + fonte;
+    var nome = cortarTexto(ctx, PJ.primeiroNome(j.nome), md.largura - fonteNome * 0.8);
+    var caixaL = Math.min(ctx.measureText(nome).width + fonteNome * 0.8, md.largura);
+    var esquerdaLim = margem + md.esquerdaNoCampo;
+    var caixaX = PJ.limitar(px - caixaL / 2, esquerdaLim, esquerdaLim + md.largura - caixaL);
+    var caixaY = topo + md.topo;
+
+    ctx.fillStyle = '#f5f7f0';
+    ctx.strokeStyle = '#11160f';
+    ctx.lineWidth = Math.max(2, fonteNome * 0.14);
+    ctx.beginPath();
+    ctx.rect(caixaX, caixaY, caixaL, alturaPlaca);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = '#11160f';
+    ctx.textAlign = 'center';
+    ctx.fillText(nome, caixaX + caixaL / 2, caixaY + alturaPlaca * 0.71);
+  });
+
+  if (PJ.estado.adversario) {
+    ctx.textAlign = 'center';
+    c.adversarios.forEach(function (a) {
+      var px = margem + (a.x / 100) * campoLarg;
+      var py = topo + ((100 - a.y) / 100) * campoAlt;
+      ctx.beginPath();
+      ctx.arc(px, py, raio * 0.82, 0, Math.PI * 2);
+      ctx.fillStyle = PJ.corDoTema('--visitante') || '#1257c9';
+      ctx.fill();
+      ctx.lineWidth = Math.max(2, raio * 0.12);
+      ctx.strokeStyle = '#11160f';
+      ctx.stroke();
+      ctx.fillStyle = '#fff';
+      ctx.font = '800 ' + Math.round(disco * 0.4) + 'px ' + fonte;
+      ctx.fillText(String(a.n), px, py + disco * 0.14);
+    });
+  }
+
+  // --------------------------------------------------------------- rodapé
+  var banco = PJ.banco();
+  ctx.textAlign = 'left';
+  ctx.fillStyle = '#b3bdb0';
+  ctx.font = '700 ' + Math.round(larg * 0.026) + 'px ' + fonte;
+  var textoBanco = banco.length
+    ? 'Banco: ' + banco.map(function (jj) {
+      return jj.numero + ' ' + jj.nome + (PJ.ehCapitao(jj.id) ? ' (C)' : '');
+    }).join(', ')
+    : 'Todo o time está em campo.';
+  ctx.fillText(cortarTexto(ctx, textoBanco, campoLarg), margem, topo + campoAlt + Math.round(larg * 0.042));
+
+  var comissaoFoto = PJ.estado.comissao.filter(function (x) { return x.nome; })
+    .map(function (x) { return x.cargo + ': ' + x.nome; }).join('   ·   ');
+  if (comissaoFoto) {
+    ctx.fillStyle = '#8f9a8d';
+    ctx.font = '700 ' + Math.round(larg * 0.024) + 'px ' + fonte;
+    ctx.fillText(cortarTexto(ctx, comissaoFoto, campoLarg), margem, topo + campoAlt + Math.round(larg * 0.075));
+  }
+  ctx.fillStyle = '#6f7a6d';
+  ctx.font = '700 ' + Math.round(larg * 0.021) + 'px ' + fonte;
+  ctx.fillText('Plano de Jogo', margem, topo + campoAlt + Math.round(larg * 0.107));
+
+  return cv;
+};
+
+PJ.PAINEIS.foto = {
+  alto: true,
+  titulo: function () { return 'Foto do campo'; },
+  montar: function (corpo) {
+    var cv;
+    try {
+      cv = PJ.gerarFoto();
+    } catch (err) {
+      corpo.appendChild(texto('Não consegui montar a foto neste aparelho. Use o print da tela.'));
+      return;
+    }
+    var img = document.createElement('img');
+    img.className = 'previaFoto';
+    img.alt = 'Campo com a escalação do ' + PJ.estado.nomeTime;
+    try {
+      img.src = cv.toDataURL('image/png');
+    } catch (err) {
+      corpo.appendChild(texto('Não consegui montar a foto neste aparelho. Use o print da tela.'));
+      return;
+    }
+    corpo.appendChild(img);
+    corpo.appendChild(texto('Segure o dedo em cima da foto para salvar ou mandar no WhatsApp.'));
+
+    if (navigator.share && navigator.canShare) {
+      corpo.appendChild(bt('Mandar a foto', 'principal larga', function () {
+        cv.toBlob(function (blob) {
+          if (!blob) { PJ.aviso('Não consegui preparar a foto. Segure o dedo na imagem para salvar.'); return; }
+          var arquivo = new File([blob], 'escalacao.png', { type: 'image/png' });
+          if (!navigator.canShare({ files: [arquivo] })) {
+            PJ.aviso('Este aparelho não deixa mandar a foto direto. Segure o dedo na imagem para salvar.');
+            return;
+          }
+          navigator.share({ files: [arquivo], title: PJ.estado.nomeTime }).catch(function () { /* cancelou */ });
+        }, 'image/png');
+      }));
+    }
+
+    corpo.appendChild(bt('Salvar a foto', 'larga', function () {
+      cv.toBlob(function (blob) {
+        if (!blob) {
+          PJ.aviso('Não consegui preparar a foto. Segure o dedo na imagem para salvar.');
+          return;
+        }
+        PJ.entregarArquivo('escalacao.png', blob,
+          'Não deu para salvar por aqui. Segure o dedo em cima da foto e escolha salvar.');
+      }, 'image/png');
+    }));
+  },
+};
+
+// ------------------------------------------------------ anotações do jogo
+
+PJ.registrarNoJogo = function (txt) {
+  if (!PJ.estado.jogo.ligado) return;
+  PJ.estado.jogo.registro.push({ hora: PJ.relogioDoJogo(), texto: txt });
+  if (PJ.estado.jogo.registro.length > 80) PJ.estado.jogo.registro.shift();
+};
+
+PJ.PAINEIS.jogo = {
+  alto: true,
+  titulo: function () { return 'Anotações do jogo'; },
+  montar: function (corpo) {
+    var j = PJ.estado.jogo;
+    if (!j.ligado) {
+      corpo.appendChild(texto('Ligue as anotações para o aplicativo guardar o placar e tudo que você mudar durante a partida.'));
+      corpo.appendChild(bt('Começar o jogo', 'principal larga', function () {
+        PJ.antes('começar o jogo');
+        PJ.estado.jogo = { ligado: true, nos: 0, eles: 0, registro: [] };
+        PJ.estado.jogo.registro.push({ hora: PJ.relogioDoJogo(), texto: 'Começo do jogo' });
+        PJ.salvar();
+        PJ.recarregarPainel();
+      }));
+      if (j.registro.length) {
+        corpo.appendChild(cria('p', 'rotulo', 'Último jogo'));
+        corpo.appendChild(listaDoJogo(j));
+      }
+      return;
+    }
+
+    var placar = cria('p', 'rotulo',
+      PJ.estado.nomeTime + '  ' + j.nos + '  x  ' + j.eles + '  Adversário');
+    placar.style.fontSize = '20px';
+    corpo.appendChild(placar);
+
+    var gols = cria('div', 'linhaBotoes');
+    gols.appendChild(bt('Gol nosso', 'principal', function () {
+      PJ.antes('gol'); j.nos++; PJ.registrarNoJogo('Gol nosso (' + j.nos + ' x ' + j.eles + ')');
+      PJ.salvar(); PJ.recarregarPainel();
+    }));
+    gols.appendChild(bt('Gol deles', '', function () {
+      PJ.antes('gol'); j.eles++; PJ.registrarNoJogo('Gol deles (' + j.nos + ' x ' + j.eles + ')');
+      PJ.salvar(); PJ.recarregarPainel();
+    }));
+    corpo.appendChild(gols);
+
+    var marcos = cria('div', 'linhaBotoes');
+    marcos.appendChild(bt('Intervalo', '', function () {
+      PJ.registrarNoJogo('Intervalo'); PJ.salvar(); PJ.recarregarPainel();
+    }));
+    marcos.appendChild(bt('Fim de jogo', '', function () {
+      PJ.antes('fim de jogo');
+      PJ.registrarNoJogo('Fim de jogo (' + j.nos + ' x ' + j.eles + ')');
+      j.ligado = false;
+      PJ.salvar();
+      PJ.recarregarPainel();
+    }));
+    corpo.appendChild(marcos);
+
+    corpo.appendChild(cria('p', 'rotulo', 'O que aconteceu'));
+    corpo.appendChild(listaDoJogo(j));
+  },
+};
+
+function listaDoJogo(j) {
+  var lista = cria('div', 'lista');
+  if (!j.registro.length) {
+    lista.appendChild(texto('Ainda não aconteceu nada.'));
+    return lista;
+  }
+  j.registro.slice().reverse().forEach(function (r) {
+    var item = cria('div', 'itemLista');
+    var quem = cria('span', 'quem');
+    quem.appendChild(cria('strong', null, r.texto));
+    quem.appendChild(cria('span', 'etiqueta', r.hora));
+    item.appendChild(quem);
+    lista.appendChild(item);
+  });
+  return lista;
+}
+
+/* ===== 60-app.js ===== */
+// Liga tudo: abre o aplicativo, desenha a tela e cuida das dicas.
+
+PJ.atualizar = function () {
+  PJ.salvar();
+  PJ.render();
+};
+
+PJ.render = function () {
+  var m = PJ.modalidade();
+  var c = PJ.campo();
+
+  var nomeTime = document.getElementById('btNomeTime');
+  nomeTime.textContent = PJ.estado.nomeTime;
+  nomeTime.setAttribute('aria-label', 'Time: ' + PJ.estado.nomeTime + '. Toque para trocar o nome.');
+  document.getElementById('btDesfazer').disabled = !PJ.temDesfazer();
+
+  // tudo que muda a altura da tela vem ANTES de medir o campo, senão ele
+  // é calculado com a medida velha e acaba passando por cima da barra
+  PJ.mostrarChipModalidade();
+  PJ.mostrarBarraJogador();
+
+  var faltam = m.emCampo - c.emCampo.length;
+  var selo = document.getElementById('seloContagem');
+  selo.hidden = faltam <= 0;
+  selo.textContent = 'Faltam ' + faltam + ' — toque em Banco';
+  selo.classList.add('falta');
+
+  var fora = PJ.banco().length;
+  document.getElementById('quantosBanco').textContent = fora + ' fora';
+
+  if (PJ.painelAberto) PJ.recarregarPainel();
+
+  PJ.desenharListaLado();
+  PJ.ajustarPalco();
+  PJ.montarCampoSVG(document.getElementById('linhas'), m);
+  PJ.desenharSetas();
+  PJ.desenharPecas();
+  PJ.marcarBarra();
+};
+
+// Só o campo escolhido aparece no alto da tela; tocar nele abre a escolha.
+PJ.mostrarChipModalidade = function () {
+  var m = PJ.modalidade();
+  document.getElementById('nomeModalidade').textContent = m.nome;
+  document.getElementById('quantosCampo').textContent = m.emCampo + ' em campo';
+  document.getElementById('btModalidade').setAttribute('aria-label',
+    'Tipo de campo: ' + m.nome + '. Toque para trocar.');
+};
+
+// O campo sempre em pé, do maior tamanho que couber na tela.
+PJ.ajustarPalco = function () {
+  var area = document.getElementById('areaCampo');
+  var m = PJ.modalidade();
+  var lado = document.getElementById('listaLado');
+  var larguraLado = lado && lado.offsetWidth ? lado.offsetWidth + 18 : 0;
+  var disponivelL = area.clientWidth - larguraLado;
+  var disponivelA = area.clientHeight;
+  if (disponivelL <= 0 || !disponivelA) return;
+
+  var larg = Math.min(disponivelL, disponivelA * m.proporcao);
+  var alt = larg / m.proporcao;
+  PJ.elPalco.style.width = Math.floor(larg) + 'px';
+  PJ.elPalco.style.height = Math.floor(alt) + 'px';
+  PJ.elPalco.dataset.superficie = m.superficie;
+  PJ.elPalco.dataset.modalidade = m.id;
+
+  // peça grande o bastante para o dedo, pequena o bastante para caber
+  var proporcaoDisco = m.id === 'futsal' ? 0.17 : (m.id === 'society' ? 0.145 : 0.125);
+  var disco = PJ.limitar(larg * proporcaoDisco, 42, 68);
+  PJ.elPalco.style.setProperty('--disco', Math.round(disco) + 'px');
+  PJ.medirPalco();
+};
+
+PJ.trocarModalidade = function (id) {
+  if (id === PJ.estado.modalidade) return;
+  PJ.antes('trocar tipo de campo');
+  PJ.estado.modalidade = id;
+  PJ.selecionado = null;
+  var m = PJ.modalidade();
+  var c = PJ.campo();
+  var antes = c.emCampo.length;
+  if (c.emCampo.length < m.emCampo) PJ.completarEscalacao();
+  if (PJ.estado.adversario) PJ.montarAdversarios();
+  PJ.atualizar();
+
+  var fora = PJ.banco().length;
+  var msg = 'No ' + m.nome + ' jogam ' + m.emCampo + '.';
+  if (fora > 0) msg += ' Os outros ' + fora + ' estão no banco — ninguém foi apagado.';
+  if (c.emCampo.length > antes) msg += ' Coloquei mais gente em campo para completar.';
+  if (c.emCampo.length < m.emCampo) msg += ' Ainda faltam ' + (m.emCampo - c.emCampo.length) + '.';
+  PJ.aviso(msg, 'Desfazer', PJ.desfazerAcao);
+};
+
+PJ.desfazerAcao = function () {
+  var rotulo = PJ.desfazer();
+  if (!rotulo) return;
+  PJ.selecionado = null;
+  PJ.aplicarTema();
+  PJ.render();
+  PJ.anunciar('Desfeito: ' + rotulo);
+};
+
+PJ.atualizarDesfazer = function () {
+  var b = document.getElementById('btDesfazer');
+  if (b) b.disabled = !PJ.temDesfazer();
+};
+
+// --------------------------------------------------------------- tela
+// Um dono só para o visual: 'auto' segue o celular até ele escolher,
+// depois quem manda é a escolha dele.
+
+PJ.OPCOES_TELA = [
+  { id: 'normal', nome: 'Normal', explica: 'O jeito comum, para usar em qualquer lugar.' },
+  { id: 'sol', nome: 'Para o sol', explica: 'Fundo branco, letra preta e botão maior, para ler no sol forte.' },
+  { id: 'noite', nome: 'Para a noite', explica: 'Fundo escuro, para jogo à noite e para não cansar a vista.' },
+];
+
+PJ.nomeDaTela = function () {
+  var atual = PJ.estado.tela;
+  if (atual === 'auto') {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'Para a noite' : 'Normal';
+  }
+  for (var i = 0; i < PJ.OPCOES_TELA.length; i++) {
+    if (PJ.OPCOES_TELA[i].id === atual) return PJ.OPCOES_TELA[i].nome;
+  }
+  return 'Normal';
+};
+
+PJ.aplicarTema = function () {
+  var raiz = document.documentElement;
+  var t = PJ.estado.tela;
+  raiz.setAttribute('data-sol', t === 'sol' ? '1' : '0');
+  if (t === 'noite') raiz.setAttribute('data-theme', 'dark');
+  else if (t === 'normal' || t === 'sol') raiz.setAttribute('data-theme', 'light');
+  else raiz.removeAttribute('data-theme');
+};
+
+PJ.PAINEIS.tela = {
+  titulo: function () { return 'Tela'; },
+  montar: function (corpo) {
+    corpo.appendChild(PJ.cria('p', 'explica', 'Escolha como a tela fica melhor de ler agora.'));
+    PJ.OPCOES_TELA.forEach(function (o) {
+      var b = PJ.cria('button', 'escolhaEstilo');
+      b.type = 'button';
+      b.appendChild(document.createTextNode((PJ.nomeDaTela() === o.nome ? '✓ ' : '') + o.nome));
+      b.appendChild(PJ.cria('span', null, o.explica));
+      b.setAttribute('aria-pressed', PJ.nomeDaTela() === o.nome ? 'true' : 'false');
+      b.addEventListener('click', function () {
+        PJ.estado.tela = o.id;
+        PJ.aplicarTema();
+        PJ.salvar();
+        PJ.recarregarPainel();
+      });
+      corpo.appendChild(b);
+    });
+    corpo.appendChild(PJ.bt('Pronto', 'principal larga', function () {
+      if (PJ.pilhaPaineis.length) PJ.voltarPainel(); else PJ.fecharPainel();
+    }));
+  },
+};
+
+// -------------------------------------------------------------- dicas
+
+var TEXTOS_DICA = [
+  {
+    texto: 'Arraste os jogadores com o dedo para montar o time.',
+    botoes: [['Entendi', function () { PJ.passarDica(1); }]],
+  },
+  {
+    texto: 'Isso mesmo! Agora ponha os nomes do seu time.',
+    botoes: [
+      ['Colocar meus nomes', function () { PJ.passarDica(2); PJ.abrirPainel('meutime'); }],
+      ['Depois', function () { PJ.passarDica(2); }],
+    ],
+  },
+  {
+    texto: 'Errou? Toque em Desfazer, aqui em cima. Nada se perde.',
+    botoes: [['Começar', function () { PJ.passarDica(99); }]],
+  },
+];
+
+PJ.mostrarDica = function () {
+  var caixa = document.getElementById('dica');
+  var passo = PJ.estado.dicas;
+  if (passo == null || passo > 2) { caixa.hidden = true; return; }
+  var d = TEXTOS_DICA[passo];
+  caixa.textContent = '';
+  caixa.appendChild(PJ.cria('p', null, d.texto));
+  var linha = PJ.cria('div', 'linhaBotoes');
+  d.botoes.forEach(function (par) { linha.appendChild(PJ.bt(par[0], 'principal', par[1])); });
+  caixa.appendChild(linha);
+  caixa.hidden = false;
+};
+
+PJ.passarDica = function (n) {
+  PJ.estado.dicas = n;
+  PJ.salvar();
+  PJ.mostrarDica();
+};
+
+// Quando o treinador arrasta pela primeira vez, a dica avança sozinha.
+PJ.contarGesto = function (tipo) {
+  if (tipo === 'mover' && PJ.estado.dicas === 0) PJ.passarDica(1);
+};
+
+// --------------------------------------------------------------- boot
+
+function ligarBotoes() {
+  document.getElementById('btDesfazer').addEventListener('click', PJ.desfazerAcao);
+
+  document.getElementById('btNomeTime').addEventListener('click', function () {
+    PJ.pedirTexto('Nome do time', PJ.estado.nomeTime, function (v) {
+      PJ.antes('nome do time');
+      PJ.estado.nomeTime = v;
+      PJ.atualizar();
+    });
+  });
+
+  var abrirOuFechar = function (id) {
+    return function () {
+      if (PJ.painelAberto === id && !PJ.telaGrande()) { PJ.fecharPainel(); return; }
+      PJ.abrirPainel(id);
+    };
+  };
+  document.getElementById('btModalidade').addEventListener('click', abrirOuFechar('modalidade'));
+  document.getElementById('btConfigurar').addEventListener('click', abrirOuFechar('configurar'));
+  document.getElementById('btBanco').addEventListener('click', abrirOuFechar('banco'));
+  document.getElementById('btTaticas').addEventListener('click', abrirOuFechar('taticas'));
+  document.getElementById('btDesenhar').addEventListener('click', function () {
+    PJ.trocarModoDesenho(!PJ.modoDesenho);
+    if (!PJ.modoDesenho) PJ.fecharPainel();
+  });
+
+  var fechar = function () {
+    if (PJ.pilhaPaineis.length) { PJ.voltarPainel(); return; }
+    if (PJ.modoDesenho) PJ.trocarModoDesenho(false);
+    PJ.fecharPainel();
+  };
+  document.getElementById('btFecharFolha').addEventListener('click', fechar);
+  document.getElementById('cortina').addEventListener('click', fechar);
+  document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape') fechar(); });
+
+  var aoRedimensionar = function () {
+    PJ.ajustarPalco();
+    PJ.desenharSetas();
+    PJ.desenharPecas();
+    if (PJ.telaGrande() && !PJ.painelAberto) PJ.abrirPainel('banco');
+  };
+  window.addEventListener('resize', aoRedimensionar);
+  window.addEventListener('orientationchange', aoRedimensionar);
+
+  // qualquer coisa que mexa na altura da área do campo (barra do jogador,
+  // teclado, faixa de aviso) manda o campo se reajustar
+  if (window.ResizeObserver) {
+    var ultimo = '';
+    new window.ResizeObserver(function () {
+      var area = document.getElementById('areaCampo');
+      var agora = area.clientWidth + 'x' + area.clientHeight;
+      if (agora === ultimo) return;
+      ultimo = agora;
+      PJ.ajustarPalco();
+      PJ.desenharSetas();
+      PJ.desenharPecas();
+    }).observe(document.getElementById('areaCampo'));
+  }
+}
+
+function comecar() {
+  PJ.elPalco = document.getElementById('palco');
+  PJ.elPecas = document.getElementById('pecas');
+
+  var primeiraVez = PJ.carregar();
+  if (PJ.estado.adversario) PJ.montarAdversarios();
+
+  PJ.aplicarTema();
+  PJ.ligarDesenho();
+  PJ.ligarGestos();
+  PJ.ligarGravacaoSegura();
+  ligarBotoes();
+
+  PJ.render();
+
+  if (PJ.semMemoria) {
+    PJ.aviso('Este navegador não deixa guardar nada. Enquanto a aba estiver aberta funciona, mas guarde uma cópia em Mais > Ajustes.');
+  }
+  if (primeiraVez) PJ.estado.dicas = 0;
+  PJ.mostrarDica();
+  if (!primeiraVez) {
+    if (PJ.deOndeVeio === 'copia') {
+      PJ.aviso('A gravação principal falhou, mas o seu time estava na segunda via e foi recuperado.');
+    } else if (PJ.deOndeVeio === 'antiga') {
+      PJ.aviso('Encontrei o seu time guardado por uma versão anterior e trouxe de volta.');
+    } else {
+      PJ.aviso('Tudo como você deixou.');
+    }
+    // depois que o elenco já é dele, lembra uma vez de guardar a cópia
+    if (!PJ.estado.lembreiCopia && PJ.estado.elenco.length &&
+        PJ.quantosDeExemplo() === 0) {
+      PJ.estado.lembreiCopia = true;
+      PJ.salvar();
+      window.setTimeout(function () {
+        PJ.aviso('Guarde uma cópia do seu time em Configurar. É o que salva você se trocar de celular ou limpar o navegador.',
+          'Guardar agora', function () { PJ.abrirPainel('configurar'); });
+      }, 2500);
+    }
+  }
+
+  if (PJ.telaGrande()) PJ.abrirPainel('banco');
+
+  // ajusta de novo depois que a fonte carregar, senão o campo fica torto
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function () { PJ.ajustarPalco(); });
+  }
+  window.setTimeout(PJ.ajustarPalco, 120);
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', comecar);
+} else {
+  comecar();
+}
+
+</script>
+
+</body>
+</html>

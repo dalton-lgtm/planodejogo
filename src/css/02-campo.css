@@ -1,0 +1,253 @@
+/* O campo e a peca do jogador. O campo fica sempre em pe, com o nosso gol
+   embaixo, igual ao desenho que o treinador fez a mao. */
+
+.areaCampo {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 18px 16px 14px;
+}
+
+/* Em tela larga sobra muito espaço ao lado do campo em pé: ali ficam o
+   banco e a comissão técnica, sempre à vista. */
+.listaLado {
+  display: none;
+  width: 250px;
+  flex: none;
+  align-self: stretch;
+  flex-direction: column;
+  min-height: 0;
+}
+@media (min-width: 1080px) {
+  .listaLado { display: flex; }
+}
+
+#palco {
+  position: relative;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  background: var(--grama);
+  border: 0;
+  outline: 3px solid var(--gramaBorda);
+  outline-offset: 0;
+}
+
+/* superficie: muda com a modalidade, para o treinador ver que trocou */
+#palco[data-superficie='grama'] {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    var(--grama) 0 12.5%,
+    var(--gramaFaixa) 12.5% 25%
+  );
+}
+#palco[data-superficie='sintetico'] {
+  background-color: #245f35;
+  background-image: repeating-linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0.05) 0 1px,
+    transparent 1px 12.5%
+  );
+}
+#palco[data-superficie='quadra'] { background-color: #2f5358; }
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) #palco[data-superficie='sintetico'] { background-color: #163f24; }
+  :root:not([data-theme='light']) #palco[data-superficie='quadra'] { background-color: #1b383c; }
+}
+:root[data-theme='dark'] #palco[data-superficie='sintetico'] { background-color: #163f24; }
+:root[data-theme='dark'] #palco[data-superficie='quadra'] { background-color: #1b383c; }
+
+.camada {
+  position: absolute;
+  inset: 0;
+  /* SVG é elemento substituído: sem largura e altura explícitas ele usa o
+     tamanho natural e ignora o `inset`, desenhando o campo mais curto que
+     a caixa — e aí as linhas saem do lugar dos jogadores */
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+#linhas, #setas { pointer-events: none; }
+#pecas { pointer-events: none; }
+#pecas .peca { pointer-events: auto; }
+
+/* no modo desenhar, a caneta pega o campo e os jogadores ficam travados */
+#palco[data-modo='desenhar'] #setas { pointer-events: auto; }
+#palco[data-modo='desenhar'] .peca { pointer-events: none; }
+#palco[data-modo='desenhar'] { outline-color: var(--acao); outline-width: 5px; }
+
+/* ------------------------------------------------ linhas de cal do campo */
+
+#linhas .cal {
+  fill: none;
+  stroke: var(--cal);
+  stroke-opacity: 0.92;
+  stroke-width: 0.8;
+  stroke-linejoin: round;
+}
+#linhas .cal.fraca { stroke-opacity: 0.5; }
+#linhas .cal.meio { stroke: var(--meio); stroke-width: 1.15; stroke-opacity: 1; }
+#linhas .calCheia { fill: var(--cal); fill-opacity: 0.92; stroke: none; }
+#linhas .gol { fill: var(--cal); fill-opacity: 0.85; stroke: none; }
+#linhas .rede { stroke: var(--gramaBorda); stroke-width: 0.35; }
+
+:root[data-sol='1'] #linhas .cal { stroke-width: 1.2; stroke-opacity: 1; }
+:root[data-sol='1'] #linhas .cal.meio { stroke-width: 1.7; }
+
+/* --------------------------------------------------- peca do jogador */
+
+/* o tamanho da peca e calculado no codigo, a partir do tamanho do campo,
+   para o numero e o nome nunca ficarem pequenos demais no celular */
+#palco { --disco: 52px; }
+
+.peca {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  transform: translate(-50%, -50%);
+  width: var(--disco);
+  height: var(--disco);
+  display: block;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  z-index: 2;
+}
+
+.peca .disco {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--casa);
+  border: 3px solid var(--contorno);
+  box-shadow: var(--sombraPeca);
+  color: var(--cal);
+  line-height: 1;
+  overflow: hidden;
+}
+/* a sigla da posição mora DENTRO do disco: assim ela nunca encosta no
+   nome do companheiro da linha de trás */
+.peca .disco .sigla {
+  font-family: var(--letra);
+  font-weight: 700;
+  font-size: calc(var(--disco) * 0.185);
+  letter-spacing: 0.04em;
+  opacity: 0.95;
+  margin-bottom: 1px;
+}
+.peca .disco .num {
+  font-family: var(--placar);
+  font-weight: 800;
+  font-size: calc(var(--disco) * 0.42);
+  font-variant-numeric: tabular-nums;
+}
+.peca.adversaria .disco {
+  background: var(--visitante);
+  color: #fff;
+}
+.peca.adversaria .disco .num { font-size: calc(var(--disco) * 0.46); }
+
+.peca .placa {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  transform: translateY(4px);
+  max-width: 100px;
+  padding: 2px 6px;
+  background: var(--cal);
+  border: 2px solid var(--contorno);
+  border-radius: 5px;
+  color: #11160f;
+  font-size: 12.5px;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.peca[data-placa='acima'] .placa {
+  top: auto;
+  bottom: 100%;
+  transform: translateY(-4px);
+}
+
+.peca.escolhida { z-index: 4; }
+.peca.escolhida .disco {
+  box-shadow: 0 0 0 4px var(--selecao), var(--sombraPeca);
+}
+
+.peca.carregando { z-index: 5; }
+.peca.carregando .disco { box-shadow: var(--sombraPecaAlta); }
+
+.peca:focus-visible { outline: none; }
+.peca:focus-visible .disco {
+  outline: 3px solid var(--selecao);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 7px rgba(17, 22, 15, 0.85), var(--sombraPeca);
+}
+
+/* a faixa de capitão, no canto do disco */
+.peca .faixa {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: calc(var(--disco) * 0.4);
+  height: calc(var(--disco) * 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--selecao);
+  border: 2px solid var(--contorno);
+  color: #11160f;
+  font-family: var(--placar);
+  font-weight: 800;
+  font-size: calc(var(--disco) * 0.26);
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* de onde o jogador saiu */
+#origem {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  transform: translate(-50%, -50%);
+  width: var(--disco);
+  height: var(--disco);
+  border: 2px dashed var(--cal);
+  border-radius: 50%;
+  opacity: 0.85;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* etiqueta da modalidade e contador, dentro do campo */
+.selo {
+  position: absolute;
+  z-index: 3;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: rgba(17, 22, 15, 0.72);
+  color: var(--cal);
+  font-size: 13px;
+  font-weight: 700;
+  pointer-events: none;
+}
+.selo.emCima { top: 6px; left: 6px; }
+.selo.embaixo { bottom: 6px; right: 6px; }
+.selo.falta { background: var(--perigo); color: #fff; }
